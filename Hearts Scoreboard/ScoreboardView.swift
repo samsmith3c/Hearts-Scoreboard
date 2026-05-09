@@ -16,6 +16,9 @@ struct ScoreboardView: View {
     @State private var showMoonConfirmation = false
     @State private var moonShooterIndex: Int? = nil
 
+    // Quit confirmation
+    @State private var showQuitConfirmation = false
+
     private let buttonColumnWidth: CGFloat = 44
 
     private var moonAlertTitle: String {
@@ -52,6 +55,13 @@ struct ScoreboardView: View {
                 viewModel.resetGame()
             }
         }
+        // Quit confirmation alert
+        .alert("Quit Game?", isPresented: $showQuitConfirmation) {
+            Button("Quit", role: .destructive) { viewModel.resetGame() }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Your current scores will be lost.")
+        }
         // Shoot-the-moon confirmation alert
         .alert(moonAlertTitle, isPresented: $showMoonConfirmation) {
             Button("Confirm") { confirmShootTheMoon() }
@@ -86,7 +96,14 @@ struct ScoreboardView: View {
                 }
                 .frame(maxWidth: .infinity)
             }
-            Spacer().frame(width: buttonColumnWidth + 4)
+            Button {
+                showQuitConfirmation = true
+            } label: {
+                Image(systemName: "xmark.circle")
+                    .font(.title3)
+                    .foregroundColor(.white.opacity(0.45))
+            }
+            .frame(width: buttonColumnWidth + 4)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 14)

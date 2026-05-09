@@ -13,7 +13,7 @@ struct ContentView: View {
     @StateObject private var viewModel = GameViewModel()
 
     var body: some View {
-        if viewModel.gameStarted {
+        if viewModel.gameStarted {  
             ScoreboardView(viewModel: viewModel)
         } else {
             PlayerSetupView(viewModel: viewModel)
