@@ -15,6 +15,12 @@
 		A53C14C52FAECDFD00355C98 /* Hearts_ScoreboardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14C42FAECDFD00355C98 /* Hearts_ScoreboardTests.swift */; };
 		A53C14CF2FAECDFD00355C98 /* Hearts_ScoreboardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14CE2FAECDFD00355C98 /* Hearts_ScoreboardUITests.swift */; };
 		A53C14D12FAECDFD00355C98 /* Hearts_ScoreboardUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14D02FAECDFD00355C98 /* Hearts_ScoreboardUITestsLaunchTests.swift */; };
+		A53C14F02FAEF22300355C98 /* GameViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14EA2FAEF22300355C98 /* GameViewModel.swift */; };
+		A53C14F12FAEF22300355C98 /* ShootingMoonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14EB2FAEF22300355C98 /* ShootingMoonView.swift */; };
+		A53C14F22FAEF22300355C98 /* PlayerSetupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14EC2FAEF22300355C98 /* PlayerSetupView.swift */; };
+		A53C14F32FAEF22300355C98 /* ScoreboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14ED2FAEF22300355C98 /* ScoreboardView.swift */; };
+		A53C14F42FAEF22300355C98 /* ConfettiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14EE2FAEF22300355C98 /* ConfettiView.swift */; };
+		A53C14F52FAEF22300355C98 /* HandRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14EF2FAEF22300355C98 /* HandRowView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +52,12 @@
 		A53C14CA2FAECDFD00355C98 /* Hearts ScoreboardUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Hearts ScoreboardUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A53C14CE2FAECDFD00355C98 /* Hearts_ScoreboardUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hearts_ScoreboardUITests.swift; sourceTree = "<group>"; };
 		A53C14D02FAECDFD00355C98 /* Hearts_ScoreboardUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hearts_ScoreboardUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		A53C14EA2FAEF22300355C98 /* GameViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameViewModel.swift; sourceTree = "<group>"; };
+		A53C14EB2FAEF22300355C98 /* ShootingMoonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ShootingMoonView.swift; sourceTree = "<group>"; };
+		A53C14EC2FAEF22300355C98 /* PlayerSetupView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PlayerSetupView.swift; sourceTree = "<group>"; };
+		A53C14ED2FAEF22300355C98 /* ScoreboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreboardView.swift; sourceTree = "<group>"; };
+		A53C14EE2FAEF22300355C98 /* ConfettiView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfettiView.swift; sourceTree = "<group>"; };
+		A53C14EF2FAEF22300355C98 /* HandRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandRowView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +108,12 @@
 		A53C14B02FAECDFC00355C98 /* Hearts Scoreboard */ = {
 			isa = PBXGroup;
 			children = (
+				A53C14EE2FAEF22300355C98 /* ConfettiView.swift */,
+				A53C14EA2FAEF22300355C98 /* GameViewModel.swift */,
+				A53C14EF2FAEF22300355C98 /* HandRowView.swift */,
+				A53C14EC2FAEF22300355C98 /* PlayerSetupView.swift */,
+				A53C14ED2FAEF22300355C98 /* ScoreboardView.swift */,
+				A53C14EB2FAEF22300355C98 /* ShootingMoonView.swift */,
 				A53C14B12FAECDFC00355C98 /* Hearts_ScoreboardApp.swift */,
 				A53C14B32FAECDFC00355C98 /* ContentView.swift */,
 				A53C14B52FAECDFC00355C98 /* Item.swift */,
@@ -260,9 +278,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A53C14F52FAEF22300355C98 /* HandRowView.swift in Sources */,
+				A53C14F02FAEF22300355C98 /* GameViewModel.swift in Sources */,
 				A53C14B42FAECDFC00355C98 /* ContentView.swift in Sources */,
 				A53C14B62FAECDFC00355C98 /* Item.swift in Sources */,
 				A53C14B22FAECDFC00355C98 /* Hearts_ScoreboardApp.swift in Sources */,
+				A53C14F42FAEF22300355C98 /* ConfettiView.swift in Sources */,
+				A53C14F32FAEF22300355C98 /* ScoreboardView.swift in Sources */,
+				A53C14F12FAEF22300355C98 /* ShootingMoonView.swift in Sources */,
+				A53C14F22FAEF22300355C98 /* PlayerSetupView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
