@@ -1,0 +1,591 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A53C14B22FAECDFC00355C98 /* Hearts_ScoreboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14B12FAECDFC00355C98 /* Hearts_ScoreboardApp.swift */; };
+		A53C14B42FAECDFC00355C98 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14B32FAECDFC00355C98 /* ContentView.swift */; };
+		A53C14B62FAECDFC00355C98 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14B52FAECDFC00355C98 /* Item.swift */; };
+		A53C14B82FAECDFD00355C98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A53C14B72FAECDFD00355C98 /* Assets.xcassets */; };
+		A53C14BB2FAECDFD00355C98 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A53C14BA2FAECDFD00355C98 /* Preview Assets.xcassets */; };
+		A53C14C52FAECDFD00355C98 /* Hearts_ScoreboardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14C42FAECDFD00355C98 /* Hearts_ScoreboardTests.swift */; };
+		A53C14CF2FAECDFD00355C98 /* Hearts_ScoreboardUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14CE2FAECDFD00355C98 /* Hearts_ScoreboardUITests.swift */; };
+		A53C14D12FAECDFD00355C98 /* Hearts_ScoreboardUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14D02FAECDFD00355C98 /* Hearts_ScoreboardUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		A53C14C12FAECDFD00355C98 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A53C14A62FAECDFC00355C98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A53C14AD2FAECDFC00355C98;
+			remoteInfo = "Hearts Scoreboard";
+		};
+		A53C14CB2FAECDFD00355C98 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = A53C14A62FAECDFC00355C98 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = A53C14AD2FAECDFC00355C98;
+			remoteInfo = "Hearts Scoreboard";
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		A53C14AE2FAECDFC00355C98 /* Hearts Scoreboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hearts Scoreboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A53C14B12FAECDFC00355C98 /* Hearts_ScoreboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hearts_ScoreboardApp.swift; sourceTree = "<group>"; };
+		A53C14B32FAECDFC00355C98 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		A53C14B52FAECDFC00355C98 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		A53C14B72FAECDFD00355C98 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A53C14BA2FAECDFD00355C98 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		A53C14C02FAECDFD00355C98 /* Hearts ScoreboardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Hearts ScoreboardTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A53C14C42FAECDFD00355C98 /* Hearts_ScoreboardTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hearts_ScoreboardTests.swift; sourceTree = "<group>"; };
+		A53C14CA2FAECDFD00355C98 /* Hearts ScoreboardUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Hearts ScoreboardUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A53C14CE2FAECDFD00355C98 /* Hearts_ScoreboardUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hearts_ScoreboardUITests.swift; sourceTree = "<group>"; };
+		A53C14D02FAECDFD00355C98 /* Hearts_ScoreboardUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hearts_ScoreboardUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		A53C14AB2FAECDFC00355C98 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A53C14BD2FAECDFD00355C98 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A53C14C72FAECDFD00355C98 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		A53C14A52FAECDFC00355C98 = {
+			isa = PBXGroup;
+			children = (
+				A53C14B02FAECDFC00355C98 /* Hearts Scoreboard */,
+				A53C14C32FAECDFD00355C98 /* Hearts ScoreboardTests */,
+				A53C14CD2FAECDFD00355C98 /* Hearts ScoreboardUITests */,
+				A53C14AF2FAECDFC00355C98 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		A53C14AF2FAECDFC00355C98 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				A53C14AE2FAECDFC00355C98 /* Hearts Scoreboard.app */,
+				A53C14C02FAECDFD00355C98 /* Hearts ScoreboardTests.xctest */,
+				A53C14CA2FAECDFD00355C98 /* Hearts ScoreboardUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		A53C14B02FAECDFC00355C98 /* Hearts Scoreboard */ = {
+			isa = PBXGroup;
+			children = (
+				A53C14B12FAECDFC00355C98 /* Hearts_ScoreboardApp.swift */,
+				A53C14B32FAECDFC00355C98 /* ContentView.swift */,
+				A53C14B52FAECDFC00355C98 /* Item.swift */,
+				A53C14B72FAECDFD00355C98 /* Assets.xcassets */,
+				A53C14B92FAECDFD00355C98 /* Preview Content */,
+			);
+			path = "Hearts Scoreboard";
+			sourceTree = "<group>";
+		};
+		A53C14B92FAECDFD00355C98 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				A53C14BA2FAECDFD00355C98 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		A53C14C32FAECDFD00355C98 /* Hearts ScoreboardTests */ = {
+			isa = PBXGroup;
+			children = (
+				A53C14C42FAECDFD00355C98 /* Hearts_ScoreboardTests.swift */,
+			);
+			path = "Hearts ScoreboardTests";
+			sourceTree = "<group>";
+		};
+		A53C14CD2FAECDFD00355C98 /* Hearts ScoreboardUITests */ = {
+			isa = PBXGroup;
+			children = (
+				A53C14CE2FAECDFD00355C98 /* Hearts_ScoreboardUITests.swift */,
+				A53C14D02FAECDFD00355C98 /* Hearts_ScoreboardUITestsLaunchTests.swift */,
+			);
+			path = "Hearts ScoreboardUITests";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A53C14AD2FAECDFC00355C98 /* Hearts Scoreboard */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A53C14D42FAECDFD00355C98 /* Build configuration list for PBXNativeTarget "Hearts Scoreboard" */;
+			buildPhases = (
+				A53C14AA2FAECDFC00355C98 /* Sources */,
+				A53C14AB2FAECDFC00355C98 /* Frameworks */,
+				A53C14AC2FAECDFC00355C98 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "Hearts Scoreboard";
+			productName = "Hearts Scoreboard";
+			productReference = A53C14AE2FAECDFC00355C98 /* Hearts Scoreboard.app */;
+			productType = "com.apple.product-type.application";
+		};
+		A53C14BF2FAECDFD00355C98 /* Hearts ScoreboardTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A53C14D72FAECDFD00355C98 /* Build configuration list for PBXNativeTarget "Hearts ScoreboardTests" */;
+			buildPhases = (
+				A53C14BC2FAECDFD00355C98 /* Sources */,
+				A53C14BD2FAECDFD00355C98 /* Frameworks */,
+				A53C14BE2FAECDFD00355C98 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A53C14C22FAECDFD00355C98 /* PBXTargetDependency */,
+			);
+			name = "Hearts ScoreboardTests";
+			productName = "Hearts ScoreboardTests";
+			productReference = A53C14C02FAECDFD00355C98 /* Hearts ScoreboardTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		A53C14C92FAECDFD00355C98 /* Hearts ScoreboardUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = A53C14DA2FAECDFD00355C98 /* Build configuration list for PBXNativeTarget "Hearts ScoreboardUITests" */;
+			buildPhases = (
+				A53C14C62FAECDFD00355C98 /* Sources */,
+				A53C14C72FAECDFD00355C98 /* Frameworks */,
+				A53C14C82FAECDFD00355C98 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				A53C14CC2FAECDFD00355C98 /* PBXTargetDependency */,
+			);
+			name = "Hearts ScoreboardUITests";
+			productName = "Hearts ScoreboardUITests";
+			productReference = A53C14CA2FAECDFD00355C98 /* Hearts ScoreboardUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		A53C14A62FAECDFC00355C98 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1530;
+				LastUpgradeCheck = 1530;
+				TargetAttributes = {
+					A53C14AD2FAECDFC00355C98 = {
+						CreatedOnToolsVersion = 15.3;
+					};
+					A53C14BF2FAECDFD00355C98 = {
+						CreatedOnToolsVersion = 15.3;
+						TestTargetID = A53C14AD2FAECDFC00355C98;
+					};
+					A53C14C92FAECDFD00355C98 = {
+						CreatedOnToolsVersion = 15.3;
+						TestTargetID = A53C14AD2FAECDFC00355C98;
+					};
+				};
+			};
+			buildConfigurationList = A53C14A92FAECDFC00355C98 /* Build configuration list for PBXProject "Hearts Scoreboard" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = A53C14A52FAECDFC00355C98;
+			productRefGroup = A53C14AF2FAECDFC00355C98 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A53C14AD2FAECDFC00355C98 /* Hearts Scoreboard */,
+				A53C14BF2FAECDFD00355C98 /* Hearts ScoreboardTests */,
+				A53C14C92FAECDFD00355C98 /* Hearts ScoreboardUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		A53C14AC2FAECDFC00355C98 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A53C14BB2FAECDFD00355C98 /* Preview Assets.xcassets in Resources */,
+				A53C14B82FAECDFD00355C98 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A53C14BE2FAECDFD00355C98 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A53C14C82FAECDFD00355C98 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		A53C14AA2FAECDFC00355C98 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A53C14B42FAECDFC00355C98 /* ContentView.swift in Sources */,
+				A53C14B62FAECDFC00355C98 /* Item.swift in Sources */,
+				A53C14B22FAECDFC00355C98 /* Hearts_ScoreboardApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A53C14BC2FAECDFD00355C98 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A53C14C52FAECDFD00355C98 /* Hearts_ScoreboardTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		A53C14C62FAECDFD00355C98 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A53C14CF2FAECDFD00355C98 /* Hearts_ScoreboardUITests.swift in Sources */,
+				A53C14D12FAECDFD00355C98 /* Hearts_ScoreboardUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		A53C14C22FAECDFD00355C98 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A53C14AD2FAECDFC00355C98 /* Hearts Scoreboard */;
+			targetProxy = A53C14C12FAECDFD00355C98 /* PBXContainerItemProxy */;
+		};
+		A53C14CC2FAECDFD00355C98 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = A53C14AD2FAECDFC00355C98 /* Hearts Scoreboard */;
+			targetProxy = A53C14CB2FAECDFD00355C98 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		A53C14D22FAECDFD00355C98 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		A53C14D32FAECDFD00355C98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		A53C14D52FAECDFD00355C98 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Hearts Scoreboard/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.samsmith3c.Hearts-Scoreboard";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		A53C14D62FAECDFD00355C98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Hearts Scoreboard/Preview Content\"";
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.samsmith3c.Hearts-Scoreboard";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		A53C14D82FAECDFD00355C98 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.samsmith3c.Hearts-ScoreboardTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Hearts Scoreboard.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Hearts Scoreboard";
+			};
+			name = Debug;
+		};
+		A53C14D92FAECDFD00355C98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.samsmith3c.Hearts-ScoreboardTests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Hearts Scoreboard.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Hearts Scoreboard";
+			};
+			name = Release;
+		};
+		A53C14DB2FAECDFD00355C98 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.samsmith3c.Hearts-ScoreboardUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Hearts Scoreboard";
+			};
+			name = Debug;
+		};
+		A53C14DC2FAECDFD00355C98 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "com.github.samsmith3c.Hearts-ScoreboardUITests";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = "Hearts Scoreboard";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		A53C14A92FAECDFC00355C98 /* Build configuration list for PBXProject "Hearts Scoreboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A53C14D22FAECDFD00355C98 /* Debug */,
+				A53C14D32FAECDFD00355C98 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A53C14D42FAECDFD00355C98 /* Build configuration list for PBXNativeTarget "Hearts Scoreboard" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A53C14D52FAECDFD00355C98 /* Debug */,
+				A53C14D62FAECDFD00355C98 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A53C14D72FAECDFD00355C98 /* Build configuration list for PBXNativeTarget "Hearts ScoreboardTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A53C14D82FAECDFD00355C98 /* Debug */,
+				A53C14D92FAECDFD00355C98 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		A53C14DA2FAECDFD00355C98 /* Build configuration list for PBXNativeTarget "Hearts ScoreboardUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				A53C14DB2FAECDFD00355C98 /* Debug */,
+				A53C14DC2FAECDFD00355C98 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = A53C14A62FAECDFC00355C98 /* Project object */;
+}
