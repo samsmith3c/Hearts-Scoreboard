@@ -76,6 +76,23 @@ struct PlayerSetupView: View {
                 .animation(.easeInOut(duration: 0.2), value: allFieldsFilled)
             }
         }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Button { focusedField = max(0, (focusedField ?? 0) - 1) } label: {
+                    Image(systemName: "chevron.left")
+                }
+                .disabled((focusedField ?? 0) == 0)
+
+                Button { focusedField = min(3, (focusedField ?? 0) + 1) } label: {
+                    Image(systemName: "chevron.right")
+                }
+                .disabled((focusedField ?? 0) == 3)
+
+                Spacer()
+
+                Button("Done") { focusedField = nil }
+            }
+        }
     }
 
     @ViewBuilder

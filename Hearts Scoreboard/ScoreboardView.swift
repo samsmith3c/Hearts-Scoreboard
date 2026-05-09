@@ -204,7 +204,18 @@ struct ScoreboardView: View {
             .scrollDismissesKeyboard(.interactively)
             .toolbar {
                 ToolbarItemGroup(placement: .keyboard) {
+                    Button { focusedInput = max(0, (focusedInput ?? 0) - 1) } label: {
+                        Image(systemName: "chevron.left")
+                    }
+                    .disabled((focusedInput ?? 0) == 0)
+
+                    Button { focusedInput = min(3, (focusedInput ?? 0) + 1) } label: {
+                        Image(systemName: "chevron.right")
+                    }
+                    .disabled((focusedInput ?? 0) == 3)
+
                     Spacer()
+
                     Button("Done") { focusedInput = nil }
                 }
             }
