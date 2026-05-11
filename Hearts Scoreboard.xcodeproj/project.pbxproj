@@ -21,6 +21,7 @@
 		A53C14F32FAEF22300355C98 /* ScoreboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14ED2FAEF22300355C98 /* ScoreboardView.swift */; };
 		A53C14F42FAEF22300355C98 /* ConfettiView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14EE2FAEF22300355C98 /* ConfettiView.swift */; };
 		A53C14F52FAEF22300355C98 /* HandRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14EF2FAEF22300355C98 /* HandRowView.swift */; };
+		A5B942252FB162C200EAA7A4 /* Hearts Scoreboard Icon v1.icon in Resources */ = {isa = PBXBuildFile; fileRef = A5B942242FB162C200EAA7A4 /* Hearts Scoreboard Icon v1.icon */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -58,6 +59,7 @@
 		A53C14ED2FAEF22300355C98 /* ScoreboardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ScoreboardView.swift; sourceTree = "<group>"; };
 		A53C14EE2FAEF22300355C98 /* ConfettiView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConfettiView.swift; sourceTree = "<group>"; };
 		A53C14EF2FAEF22300355C98 /* HandRowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HandRowView.swift; sourceTree = "<group>"; };
+		A5B942242FB162C200EAA7A4 /* Hearts Scoreboard Icon v1.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = "Hearts Scoreboard Icon v1.icon"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +120,7 @@
 				A53C14B32FAECDFC00355C98 /* ContentView.swift */,
 				A53C14B52FAECDFC00355C98 /* Item.swift */,
 				A53C14B72FAECDFD00355C98 /* Assets.xcassets */,
+				A5B942242FB162C200EAA7A4 /* Hearts Scoreboard Icon v1.icon */,
 				A53C14B92FAECDFD00355C98 /* Preview Content */,
 			);
 			path = "Hearts Scoreboard";
@@ -252,6 +255,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A5B942252FB162C200EAA7A4 /* Hearts Scoreboard Icon v1.icon in Resources */,
 				A53C14BB2FAECDFD00355C98 /* Preview Assets.xcassets in Resources */,
 				A53C14B82FAECDFD00355C98 /* Assets.xcassets in Resources */,
 			);
@@ -445,11 +449,13 @@
 		A53C14D52FAECDFD00355C98 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Hearts Scoreboard Icon v1";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Hearts Scoreboard/Preview Content\"";
+				DEVELOPMENT_TEAM = 3PMFJURBKR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
@@ -473,11 +479,13 @@
 		A53C14D62FAECDFD00355C98 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "Hearts Scoreboard Icon v1";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Hearts Scoreboard/Preview Content\"";
+				DEVELOPMENT_TEAM = 3PMFJURBKR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
