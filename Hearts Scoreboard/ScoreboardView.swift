@@ -107,8 +107,6 @@ struct ScoreboardView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 14)
-        .frame(maxWidth: 600)
-        .frame(maxWidth: .infinity)
         .background(Color.black.opacity(0.30))
     }
 
@@ -277,8 +275,6 @@ struct ScoreboardView: View {
             .frame(width: buttonColumnWidth)
         }
         .padding(.horizontal, 12)
-        .frame(maxWidth: 600)
-        .frame(maxWidth: .infinity)
     }
 
     private var canCommit: Bool {
