@@ -34,7 +34,8 @@ struct HandRowView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 9)
-    }
+        .frame(maxWidth: 600)
+        .frame(maxWidth: .infinity)
 }
 
 #Preview {
