@@ -248,7 +248,7 @@ struct ScoreboardView: View {
     // MARK: - Input Row
 
     private var inputRow: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 10) {
             ForEach(0..<4) { i in
                 TextField("0", text: $inputValues[i])
                     .keyboardType(.numberPad)
@@ -274,7 +274,9 @@ struct ScoreboardView: View {
             .disabled(!canCommit)
             .frame(width: buttonColumnWidth)
         }
-        .padding(.horizontal, 12)
+        .padding(.horizontal, 16)
+        .frame(maxWidth: 520)
+        .frame(maxWidth: .infinity)
     }
 
     private var canCommit: Bool {
