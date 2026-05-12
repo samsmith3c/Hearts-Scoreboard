@@ -33,47 +33,49 @@ struct PlayerSetupView: View {
                         .foregroundColor(.white)
                 }
 
-                // Player name fields
-                VStack(spacing: 14) {
-                    ForEach(0..<4) { i in
-                        playerField(index: i)
+                // Form — capped width so it doesn't stretch across an iPad
+                VStack(spacing: 24) {
+                    // Player name fields
+                    VStack(spacing: 14) {
+                        ForEach(0..<4) { i in
+                            playerField(index: i)
+                        }
                     }
-                }
-                .padding(.horizontal, 32)
 
-                // Target score picker
-                VStack(spacing: 8) {
-                    Text("Target Score")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white.opacity(0.6))
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                    // Target score picker
+                    VStack(spacing: 8) {
+                        Text("Target Score")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white.opacity(0.6))
+                            .frame(maxWidth: .infinity, alignment: .leading)
 
-                    Picker("Target Score", selection: $viewModel.targetScore) {
-                        Text("50").tag(50)
-                        Text("75").tag(75)
-                        Text("100").tag(100)
+                        Picker("Target Score", selection: $viewModel.targetScore) {
+                            Text("50").tag(50)
+                            Text("75").tag(75)
+                            Text("100").tag(100)
+                        }
+                        .pickerStyle(.segmented)
                     }
-                    .pickerStyle(.segmented)
-                }
-                .padding(.horizontal, 32)
 
-                // Start Game button
-                Button {
-                    focusedField = nil
-                    viewModel.startGame()
-                } label: {
-                    Text("Start Game")
-                        .font(.headline)
-                        .foregroundColor(feltGreen)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(allFieldsFilled ? Color.white : Color.white.opacity(0.3))
-                        .cornerRadius(12)
+                    // Start Game button
+                    Button {
+                        focusedField = nil
+                        viewModel.startGame()
+                    } label: {
+                        Text("Start Game")
+                            .font(.headline)
+                            .foregroundColor(feltGreen)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(allFieldsFilled ? Color.white : Color.white.opacity(0.3))
+                            .cornerRadius(12)
+                    }
+                    .disabled(!allFieldsFilled)
+                    .animation(.easeInOut(duration: 0.2), value: allFieldsFilled)
                 }
                 .padding(.horizontal, 32)
-                .disabled(!allFieldsFilled)
-                .animation(.easeInOut(duration: 0.2), value: allFieldsFilled)
+                .frame(maxWidth: 480)
             }
         }
         .toolbar {
