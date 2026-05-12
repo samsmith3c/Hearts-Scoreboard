@@ -274,9 +274,7 @@ struct ScoreboardView: View {
             .disabled(!canCommit)
             .frame(width: buttonColumnWidth)
         }
-        .padding(.horizontal, 16)
-        .frame(maxWidth: 520)
-        .frame(maxWidth: .infinity)
+        .padding(.horizontal, 12)
     }
 
     private var canCommit: Bool {
