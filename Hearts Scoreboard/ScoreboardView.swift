@@ -47,6 +47,7 @@ struct ScoreboardView: View {
                 }
                 .allowsHitTesting(false)
             }
+
         }
         // Win alert
         .alert("\(viewModel.winner ?? "Someone") wins! 🎉", isPresented: $viewModel.showWinAlert) {
@@ -78,6 +79,15 @@ struct ScoreboardView: View {
 
     private var headerView: some View {
         HStack(spacing: 4) {
+            Button {
+                viewModel.goHome()
+            } label: {
+                Image(systemName: "house.circle")
+                    .font(.title3)
+                    .foregroundColor(.white.opacity(0.45))
+            }
+            .frame(width: buttonColumnWidth)
+
             ForEach(0..<4) { i in
                 VStack(spacing: 3) {
                     Text(viewModel.playerNames[i])
@@ -96,6 +106,7 @@ struct ScoreboardView: View {
                 }
                 .frame(maxWidth: .infinity)
             }
+
             Button {
                 showQuitConfirmation = true
             } label: {
@@ -103,7 +114,7 @@ struct ScoreboardView: View {
                     .font(.title3)
                     .foregroundColor(.white.opacity(0.45))
             }
-            .frame(width: buttonColumnWidth + 4)
+            .frame(width: buttonColumnWidth)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 14)
@@ -192,7 +203,10 @@ struct ScoreboardView: View {
                                 hand: viewModel.hands[i].values,
                                 buttonColumnWidth: buttonColumnWidth,
                                 passDirection: passDirectionLabel(for: i),
-                                moonShooterIndex: viewModel.hands[i].moonShooterIndex
+                                moonShooterIndex: viewModel.hands[i].moonShooterIndex,
+                                onSave: { values, moonIdx in
+                                    viewModel.updateHand(at: i, values: values, moonShooterIndex: moonIdx)
+                                }
                             )
                             Rectangle()
                                 .fill(Color.white.opacity(0.07))
@@ -248,7 +262,12 @@ struct ScoreboardView: View {
     // MARK: - Input Row
 
     private var inputRow: some View {
-        HStack(spacing: 4) {
+        HStack(spacing: 10) {
+            Image(systemName: "plus.circle.fill")
+                .font(.title2)
+                .hidden()
+                .frame(width: buttonColumnWidth)
+
             ForEach(0..<4) { i in
                 TextField("0", text: $inputValues[i])
                     .keyboardType(.numberPad)
@@ -259,6 +278,7 @@ struct ScoreboardView: View {
                     .background(Color.white.opacity(0.13))
                     .cornerRadius(7)
                     .focused($focusedInput, equals: i)
+                    .frame(maxWidth: 100)
                     .frame(maxWidth: .infinity)
                     .onChange(of: inputValues[i]) { _, newValue in
                         let digitsOnly = newValue.filter { $0.isNumber }
@@ -275,6 +295,9 @@ struct ScoreboardView: View {
             .frame(width: buttonColumnWidth)
         }
         .padding(.horizontal, 12)
+        .onSubmit {
+            if canCommit { handleCommitTap() }
+        }
     }
 
     private var canCommit: Bool {

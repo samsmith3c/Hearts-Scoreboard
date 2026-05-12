@@ -28,21 +28,32 @@ class GameViewModel: ObservableObject {
     @Published var targetScore: Int = GameViewModel.loadTargetScore()
 
     // Navigation / win state
-    @Published var gameStarted  = false
-    @Published var isTieBreaker = false
-    @Published var winner: String?       = nil
-    @Published var showWinAlert          = false
+    @Published var gameStarted    = false
+    @Published var hasActiveGame  = false
+    @Published var isTieBreaker   = false
+    @Published var winner: String? = nil
+    @Published var showWinAlert    = false
 
     // MARK: Actions
 
     func startGame() {
-        playerNames = playerNames.map { $0.trimmingCharacters(in: .whitespaces) }
-        scores      = [0, 0, 0, 0]
-        hands       = []
-        winner      = nil
+        playerNames  = playerNames.map { $0.trimmingCharacters(in: .whitespaces) }
+        scores       = [0, 0, 0, 0]
+        hands        = []
+        winner       = nil
         showWinAlert = false
-        gameStarted = true
+        isTieBreaker = false
+        gameStarted  = true
+        hasActiveGame = true
         savePreferences()
+    }
+
+    func goHome() {
+        gameStarted = false
+    }
+
+    func resumeGame() {
+        gameStarted = true
     }
 
     func commitHand(_ values: [Int], moonShooterIndex: Int? = nil) {
@@ -54,15 +65,28 @@ class GameViewModel: ObservableObject {
         checkWinCondition()
     }
 
-    func resetGame() {
-        playerNames  = Self.loadNames()
-        targetScore  = Self.loadTargetScore()
-        scores       = [0, 0, 0, 0]
-        hands        = []
-        isTieBreaker = false
+    func updateHand(at index: Int, values: [Int], moonShooterIndex: Int? = nil) {
+        guard index < hands.count, values.count == 4 else { return }
+        hands[index] = Hand(values: values, moonShooterIndex: moonShooterIndex)
+        scores = hands.reduce([0, 0, 0, 0]) { acc, hand in
+            zip(acc, hand.values).map(+)
+        }
         winner       = nil
         showWinAlert = false
-        gameStarted  = false
+        isTieBreaker = false
+        checkWinCondition()
+    }
+
+    func resetGame() {
+        playerNames   = Self.loadNames()
+        targetScore   = Self.loadTargetScore()
+        scores        = [0, 0, 0, 0]
+        hands         = []
+        isTieBreaker  = false
+        winner        = nil
+        showWinAlert  = false
+        gameStarted   = false
+        hasActiveGame = false
     }
 
     // MARK: Private

@@ -11,13 +11,35 @@ import SwiftUI
 
 struct ContentView: View {
     @StateObject private var viewModel = GameViewModel()
+    @Environment(\.dynamicTypeSize) private var dynamicTypeSize
 
     var body: some View {
-        if viewModel.gameStarted {  
-            ScoreboardView(viewModel: viewModel)
-        } else {
-            PlayerSetupView(viewModel: viewModel)
+        Group {
+            if viewModel.gameStarted {
+                ScoreboardView(viewModel: viewModel)
+            } else {
+                PlayerSetupView(viewModel: viewModel)
+            }
         }
+        .environment(
+            \.dynamicTypeSize,
+            UIDevice.current.userInterfaceIdiom == .pad
+                ? dynamicTypeSize.stepped(by: 2)
+                : dynamicTypeSize
+        )
+    }
+}
+
+// MARK: - DynamicTypeSize Helpers
+
+extension DynamicTypeSize {
+    func stepped(by steps: Int) -> DynamicTypeSize {
+        let ladder: [DynamicTypeSize] = [
+            .xSmall, .small, .medium, .large, .xLarge, .xxLarge, .xxxLarge,
+            .accessibility1, .accessibility2, .accessibility3, .accessibility4, .accessibility5
+        ]
+        guard let index = ladder.firstIndex(of: self) else { return self }
+        return ladder[min(index + steps, ladder.count - 1)]
     }
 }
 

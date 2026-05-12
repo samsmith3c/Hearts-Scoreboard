@@ -8,6 +8,7 @@ import SwiftUI
 struct PlayerSetupView: View {
     @ObservedObject var viewModel: GameViewModel
     @FocusState private var focusedField: Int?
+    @State private var showNewGameConfirmation = false
 
     private var allFieldsFilled: Bool {
         viewModel.playerNames.allSatisfy {
@@ -33,48 +34,74 @@ struct PlayerSetupView: View {
                         .foregroundColor(.white)
                 }
 
-                // Player name fields
-                VStack(spacing: 14) {
-                    ForEach(0..<4) { i in
-                        playerField(index: i)
+                if viewModel.hasActiveGame {
+                    Button {
+                        viewModel.resumeGame()
+                    } label: {
+                        Text("Resume Game")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 28)
+                            .padding(.vertical, 10)
+                            .background(Color(hex: "C0392B"))
+                            .cornerRadius(20)
                     }
                 }
-                .padding(.horizontal, 32)
 
-                // Target score picker
-                VStack(spacing: 8) {
-                    Text("Target Score")
-                        .font(.caption)
-                        .fontWeight(.semibold)
-                        .foregroundColor(.white.opacity(0.6))
-                        .frame(maxWidth: .infinity, alignment: .leading)
-
-                    Picker("Target Score", selection: $viewModel.targetScore) {
-                        Text("50").tag(50)
-                        Text("75").tag(75)
-                        Text("100").tag(100)
+                // Form — capped width so it doesn't stretch across an iPad
+                VStack(spacing: 24) {
+                    // Player name fields
+                    VStack(spacing: 14) {
+                        ForEach(0..<4) { i in
+                            playerField(index: i)
+                        }
                     }
-                    .pickerStyle(.segmented)
-                }
-                .padding(.horizontal, 32)
 
-                // Start Game button
-                Button {
-                    focusedField = nil
-                    viewModel.startGame()
-                } label: {
-                    Text("Start Game")
-                        .font(.headline)
-                        .foregroundColor(feltGreen)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, 14)
-                        .background(allFieldsFilled ? Color.white : Color.white.opacity(0.3))
-                        .cornerRadius(12)
+                    // Target score picker
+                    VStack(spacing: 8) {
+                        Text("Target Score")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white.opacity(0.6))
+                            .frame(maxWidth: .infinity, alignment: .leading)
+
+                        Picker("Target Score", selection: $viewModel.targetScore) {
+                            Text("50").tag(50)
+                            Text("75").tag(75)
+                            Text("100").tag(100)
+                        }
+                        .pickerStyle(.segmented)
+                    }
+
+                    // Start Game button
+                    Button {
+                        focusedField = nil
+                        if viewModel.hasActiveGame {
+                            showNewGameConfirmation = true
+                        } else {
+                            viewModel.startGame()
+                        }
+                    } label: {
+                        Text("Start New Game")
+                            .font(.headline)
+                            .foregroundColor(feltGreen)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, 14)
+                            .background(allFieldsFilled ? Color.white : Color.white.opacity(0.3))
+                            .cornerRadius(12)
+                    }
+                    .disabled(!allFieldsFilled)
+                    .animation(.easeInOut(duration: 0.2), value: allFieldsFilled)
                 }
                 .padding(.horizontal, 32)
-                .disabled(!allFieldsFilled)
-                .animation(.easeInOut(duration: 0.2), value: allFieldsFilled)
+                .frame(maxWidth: 480)
             }
+        }
+        .alert("Abandon current game?", isPresented: $showNewGameConfirmation) {
+            Button("Start New Game", role: .destructive) { viewModel.startGame() }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Your current game progress will be lost.")
         }
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
