@@ -8,6 +8,7 @@ import SwiftUI
 struct PlayerSetupView: View {
     @ObservedObject var viewModel: GameViewModel
     @FocusState private var focusedField: Int?
+    @State private var showNewGameConfirmation = false
 
     private var allFieldsFilled: Bool {
         viewModel.playerNames.allSatisfy {
@@ -31,6 +32,20 @@ struct PlayerSetupView: View {
                         .font(.largeTitle)
                         .fontWeight(.bold)
                         .foregroundColor(.white)
+                }
+
+                if viewModel.hasActiveGame {
+                    Button {
+                        viewModel.resumeGame()
+                    } label: {
+                        Text("Resume Game")
+                            .font(.headline)
+                            .foregroundColor(.white)
+                            .padding(.horizontal, 28)
+                            .padding(.vertical, 10)
+                            .background(Color(hex: "C0392B"))
+                            .cornerRadius(20)
+                    }
                 }
 
                 // Form — capped width so it doesn't stretch across an iPad
@@ -61,9 +76,13 @@ struct PlayerSetupView: View {
                     // Start Game button
                     Button {
                         focusedField = nil
-                        viewModel.startGame()
+                        if viewModel.hasActiveGame {
+                            showNewGameConfirmation = true
+                        } else {
+                            viewModel.startGame()
+                        }
                     } label: {
-                        Text("Start Game")
+                        Text("Start New Game")
                             .font(.headline)
                             .foregroundColor(feltGreen)
                             .frame(maxWidth: .infinity)
@@ -77,6 +96,12 @@ struct PlayerSetupView: View {
                 .padding(.horizontal, 32)
                 .frame(maxWidth: 480)
             }
+        }
+        .alert("Abandon current game?", isPresented: $showNewGameConfirmation) {
+            Button("Start New Game", role: .destructive) { viewModel.startGame() }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("Your current game progress will be lost.")
         }
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
