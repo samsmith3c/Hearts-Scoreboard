@@ -259,6 +259,7 @@ struct ScoreboardView: View {
                     .background(Color.white.opacity(0.13))
                     .cornerRadius(7)
                     .focused($focusedInput, equals: i)
+                    .frame(maxWidth: 100)
                     .frame(maxWidth: .infinity)
                     .onChange(of: inputValues[i]) { _, newValue in
                         let digitsOnly = newValue.filter { $0.isNumber }
