@@ -19,9 +19,6 @@ struct ScoreboardView: View {
     @State private var showMoonConfirmation   = false
     @State private var moonShooterIndex: Int? = nil
 
-    // Moon 🌙 button — explicit shooter picker
-    @State private var showMoonShooterPicker = false
-
     // Quit confirmation
     @State private var showQuitConfirmation = false
 
@@ -75,14 +72,6 @@ struct ScoreboardView: View {
             Button("Cancel", role: .cancel) { moonShooterIndex = nil }
         } message: {
             Text("The other 3 players will each receive 26 points.")
-        }
-        // Explicit moon shooter picker (Moon 🌙 button)
-        .confirmationDialog("Who shot the moon?", isPresented: $showMoonShooterPicker, titleVisibility: .visible) {
-            ForEach(0..<4) { i in
-                Button(viewModel.playerNames[i]) {
-                    commitMoonShoot(shooterIndex: i)
-                }
-            }
         }
         .onChange(of: viewModel.showWinAlert) { _, triggered in
             if triggered { showConfetti = true }
@@ -276,15 +265,10 @@ struct ScoreboardView: View {
 
     private var inputRow: some View {
         HStack(spacing: 10) {
-            // Moon 🌙 button — explicit moon shoot entry
-            Button {
-                focusedInput = nil
-                showMoonShooterPicker = true
-            } label: {
-                Text("🌙")
-                    .font(.title2)
-            }
-            .frame(width: buttonColumnWidth)
+            Image(systemName: "plus.circle.fill")
+                .font(.title2)
+                .hidden()
+                .frame(width: buttonColumnWidth)
 
             ForEach(0..<4) { i in
                 TextField("0", text: $inputValues[i])
@@ -383,14 +367,6 @@ struct ScoreboardView: View {
         adjusted[idx] = 0
         doCommit(adjusted, moonShooterIndex: idx)
         moonShooterIndex = nil
-        showMoonAnimation = true
-    }
-
-    /// Explicit moon shoot via the 🌙 button — scores are set automatically.
-    private func commitMoonShoot(shooterIndex: Int) {
-        var scores = [Int](repeating: 26, count: 4)
-        scores[shooterIndex] = 0
-        doCommit(scores, moonShooterIndex: shooterIndex)
         showMoonAnimation = true
     }
 

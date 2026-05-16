@@ -111,12 +111,14 @@ class GameViewModel: ObservableObject {
 
         var savedHands: [SavedHand] = []
         for (i, hand) in hands.enumerated() {
+            let isMoon = hand.values.filter({ $0 == 0 }).count == 1
+                      && hand.values.filter({ $0 == 26 }).count == 3
             let savedHand = SavedHand()
-            savedHand.handNumber      = i
-            savedHand.scores          = hand.values
-            savedHand.isMoonShoot     = hand.moonShooterIndex != nil
-            savedHand.moonShooterIndex = hand.moonShooterIndex
-            savedHand.game            = game
+            savedHand.handNumber       = i
+            savedHand.scores           = hand.values
+            savedHand.isMoonShoot      = isMoon
+            savedHand.moonShooterIndex = isMoon ? hand.values.firstIndex(of: 0) : nil
+            savedHand.game             = game
             savedHands.append(savedHand)
         }
         game.hands = savedHands
