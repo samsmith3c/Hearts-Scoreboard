@@ -2,10 +2,9 @@
 //  Hearts_ScoreboardApp.swift
 //  Hearts Scoreboard
 //
-//  Created by Sammy Smith on 5/8/26.
-//
 
 import SwiftUI
+import SwiftData
 
 @main
 struct Hearts_ScoreboardApp: App {
@@ -13,5 +12,12 @@ struct Hearts_ScoreboardApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(
+            for: SavedGame.self,
+            inMemory: false,
+            isAutosaveEnabled: true,
+            isUndoEnabled: false,
+            cloudKitDatabase: .private("iCloud.com.github.samsmith3c.Hearts-Scoreboard")
+        )
     }
 }
