@@ -4,11 +4,13 @@
 //
 
 import SwiftUI
+import GameKit
 
 struct PlayerSetupView: View {
     @ObservedObject var viewModel: GameViewModel
     @FocusState private var focusedField: Int?
     @State private var showNewGameConfirmation = false
+    @State private var showStats = false
 
     private var allFieldsFilled: Bool {
         viewModel.playerNames.allSatisfy {
@@ -96,12 +98,31 @@ struct PlayerSetupView: View {
                 .padding(.horizontal, 32)
                 .frame(maxWidth: 480)
             }
+
+            // Stats button — top-right corner
+            VStack {
+                HStack {
+                    Spacer()
+                    Button {
+                        showStats = true
+                    } label: {
+                        Image(systemName: "chart.bar.fill")
+                            .font(.title3)
+                            .foregroundColor(.white.opacity(0.6))
+                            .padding(16)
+                    }
+                }
+                Spacer()
+            }
         }
         .alert("Abandon current game?", isPresented: $showNewGameConfirmation) {
             Button("Start New Game", role: .destructive) { viewModel.startGame() }
             Button("Cancel", role: .cancel) { }
         } message: {
             Text("Your current game progress will be lost.")
+        }
+        .sheet(isPresented: $showStats) {
+            StatsView()
         }
         .toolbar {
             ToolbarItemGroup(placement: .keyboard) {
@@ -120,14 +141,34 @@ struct PlayerSetupView: View {
                 Button("Done") { focusedField = nil }
             }
         }
+        .onAppear {
+            authenticateGameCenter()
+        }
     }
+
+    // MARK: - Player field with self-designation icon
 
     @ViewBuilder
     private func playerField(index i: Int) -> some View {
         HStack(spacing: 12) {
-            Image(systemName: "person.fill")
-                .foregroundColor(.white.opacity(0.45))
-                .frame(width: 20)
+            // person icon — filled = this is "me", outline = not designated
+            Button {
+                if viewModel.selfPlayerIndex == i {
+                    viewModel.selfPlayerIndex = nil
+                } else {
+                    viewModel.selfPlayerIndex = i
+                }
+            } label: {
+                Image(systemName: viewModel.selfPlayerIndex == i ? "person.fill" : "person")
+                    .foregroundColor(
+                        viewModel.selfPlayerIndex == i
+                            ? .white
+                            : .white.opacity(0.45)
+                    )
+                    .frame(width: 20)
+                    .animation(.easeInOut(duration: 0.15), value: viewModel.selfPlayerIndex)
+            }
+            .buttonStyle(.plain)
 
             TextField("Player \(i + 1) name", text: $viewModel.playerNames[i])
                 .padding(.horizontal, 12)
@@ -146,6 +187,26 @@ struct PlayerSetupView: View {
                         viewModel.playerNames[i] = String(newValue.prefix(10))
                     }
                 }
+        }
+    }
+
+    // MARK: - Game Center authentication
+
+    private func authenticateGameCenter() {
+        let vm = viewModel
+        GKLocalPlayer.local.authenticateHandler = { _, _ in
+            guard GKLocalPlayer.local.isAuthenticated else { return }
+            DispatchQueue.main.async {
+                vm.gameCenterPlayerID = GKLocalPlayer.local.playerID
+                // Only pre-fill if no self-player has been designated yet
+                guard vm.selfPlayerIndex == nil else { return }
+                let gcName = GKLocalPlayer.local.displayName
+                let targetIdx = vm.playerNames.firstIndex {
+                    $0.trimmingCharacters(in: .whitespaces).isEmpty
+                } ?? 0
+                vm.playerNames[targetIdx] = gcName
+                vm.selfPlayerIndex = targetIdx
+            }
         }
     }
 }
