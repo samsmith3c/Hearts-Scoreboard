@@ -4,17 +4,23 @@
 //
 
 import SwiftUI
+import SwiftData
 
 struct ScoreboardView: View {
     @ObservedObject var viewModel: GameViewModel
+    @Environment(\.modelContext) private var modelContext
+
     @State private var inputValues: [String] = ["", "", "", ""]
     @State private var showConfetti      = false
     @State private var showMoonAnimation = false
     @FocusState private var focusedInput: Int?
 
-    // Shoot-the-moon confirmation
-    @State private var showMoonConfirmation = false
+    // Shoot-the-moon confirmation (auto-detected from score pattern)
+    @State private var showMoonConfirmation   = false
     @State private var moonShooterIndex: Int? = nil
+
+    // Moon 🌙 button — explicit shooter picker
+    @State private var showMoonShooterPicker = false
 
     // Quit confirmation
     @State private var showQuitConfirmation = false
@@ -47,12 +53,12 @@ struct ScoreboardView: View {
                 }
                 .allowsHitTesting(false)
             }
-
         }
-        // Win alert
+        // Win alert — saveGame() is called here, after the alert is dismissed
         .alert("\(viewModel.winner ?? "Someone") wins! 🎉", isPresented: $viewModel.showWinAlert) {
             Button("New Game") {
                 showConfetti = false
+                viewModel.saveGame(context: modelContext)
                 viewModel.resetGame()
             }
         }
@@ -63,12 +69,20 @@ struct ScoreboardView: View {
         } message: {
             Text("Your current scores will be lost.")
         }
-        // Shoot-the-moon confirmation alert
+        // Auto-detected moon shoot confirmation (Pattern A)
         .alert(moonAlertTitle, isPresented: $showMoonConfirmation) {
             Button("Confirm") { confirmShootTheMoon() }
             Button("Cancel", role: .cancel) { moonShooterIndex = nil }
         } message: {
             Text("The other 3 players will each receive 26 points.")
+        }
+        // Explicit moon shooter picker (Moon 🌙 button)
+        .confirmationDialog("Who shot the moon?", isPresented: $showMoonShooterPicker, titleVisibility: .visible) {
+            ForEach(0..<4) { i in
+                Button(viewModel.playerNames[i]) {
+                    commitMoonShoot(shooterIndex: i)
+                }
+            }
         }
         .onChange(of: viewModel.showWinAlert) { _, triggered in
             if triggered { showConfetti = true }
@@ -123,8 +137,8 @@ struct ScoreboardView: View {
 
     private func scoreColor(_ score: Int) -> Color {
         let pct = Double(score) / Double(viewModel.targetScore)
-        if pct >= 0.80 { return Color(hex: "FF6B6B") }   // danger — 80% of target
-        if pct >= 0.50 { return Color(hex: "FFD93D") }   // warning — 50% of target
+        if pct >= 0.80 { return Color(hex: "FF6B6B") }
+        if pct >= 0.50 { return Color(hex: "FFD93D") }
         return .white
     }
 
@@ -248,7 +262,6 @@ struct ScoreboardView: View {
         }
     }
 
-    /// Emoji passing indicator for a committed hand at the given history index.
     private func passDirectionLabel(for index: Int) -> String {
         switch index % 4 {
         case 0: return "👈"
@@ -263,10 +276,15 @@ struct ScoreboardView: View {
 
     private var inputRow: some View {
         HStack(spacing: 10) {
-            Image(systemName: "plus.circle.fill")
-                .font(.title2)
-                .hidden()
-                .frame(width: buttonColumnWidth)
+            // Moon 🌙 button — explicit moon shoot entry
+            Button {
+                focusedInput = nil
+                showMoonShooterPicker = true
+            } label: {
+                Text("🌙")
+                    .font(.title2)
+            }
+            .frame(width: buttonColumnWidth)
 
             ForEach(0..<4) { i in
                 TextField("0", text: $inputValues[i])
@@ -316,12 +334,12 @@ struct ScoreboardView: View {
 
     private var runningTotalColor: Color {
         if runningTotal == 26 || isAlreadyCorrectMoon(inputValues.map { Int($0) ?? 0 }) {
-            return Color(hex: "4CD964")     // green — valid hand or shoot the moon
+            return Color(hex: "4CD964")
         }
         if runningTotal > 26 {
-            return Color(hex: "FF6B6B")     // red — gone over (and not a moon)
+            return Color(hex: "FF6B6B")
         }
-        return .white.opacity(0.5)          // neutral — still typing
+        return .white.opacity(0.5)
     }
 
     // MARK: - Validation & Commit Logic
@@ -330,16 +348,12 @@ struct ScoreboardView: View {
         let values = inputValues.map { Int($0) ?? 0 }
         guard values.count == 4 else { return }
 
-        // Pattern A: shooter entered 26 for themselves, others entered 0.
-        // Needs confirmation because we have to invert the scores.
         if let idx = shooterEnteredOwn26(values) {
             moonShooterIndex = idx
             showMoonConfirmation = true
             return
         }
 
-        // Pattern B: user already entered the correct result —
-        // shooter has 0, the other 3 each have 26. Commit as-is + animation.
         if isAlreadyCorrectMoon(values) {
             doCommit(values, moonShooterIndex: values.firstIndex(of: 0))
             showMoonAnimation = true
@@ -350,7 +364,6 @@ struct ScoreboardView: View {
     }
 
     /// Pattern A: exactly one player entered 26, all others entered 0.
-    /// Returns the shooter's index so we can name them in the confirmation.
     private func shooterEnteredOwn26(_ values: [Int]) -> Int? {
         guard values.filter({ $0 == 26 }).count == 1,
               values.filter({ $0 == 0  }).count == 3 else { return nil }
@@ -358,7 +371,6 @@ struct ScoreboardView: View {
     }
 
     /// Pattern B: exactly three players have 26 and one player has 0.
-    /// Scores are already correct — no inversion required.
     private func isAlreadyCorrectMoon(_ values: [Int]) -> Bool {
         values.filter({ $0 == 26 }).count == 3 &&
         values.filter({ $0 == 0  }).count == 1
@@ -367,11 +379,18 @@ struct ScoreboardView: View {
     /// User confirmed Pattern A — invert scores then animate.
     private func confirmShootTheMoon() {
         guard let idx = moonShooterIndex else { return }
-        // Input: shooter=26, others=0  →  Commit: shooter=0, others=26
         var adjusted = [Int](repeating: 26, count: 4)
         adjusted[idx] = 0
         doCommit(adjusted, moonShooterIndex: idx)
         moonShooterIndex = nil
+        showMoonAnimation = true
+    }
+
+    /// Explicit moon shoot via the 🌙 button — scores are set automatically.
+    private func commitMoonShoot(shooterIndex: Int) {
+        var scores = [Int](repeating: 26, count: 4)
+        scores[shooterIndex] = 0
+        doCommit(scores, moonShooterIndex: shooterIndex)
         showMoonAnimation = true
     }
 
@@ -389,4 +408,5 @@ struct ScoreboardView: View {
     vm.commitHand([5, 0, 13, 8])
     vm.commitHand([0, 26, 0, 0])
     return ScoreboardView(viewModel: vm)
+        .modelContainer(for: SavedGame.self, inMemory: true)
 }
