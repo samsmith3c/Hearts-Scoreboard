@@ -42,6 +42,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		223476C02FB9170600FBF4CF /* Hearts Scoreboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Hearts Scoreboard.entitlements"; sourceTree = "<group>"; };
 		A53C14AE2FAECDFC00355C98 /* Hearts Scoreboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hearts Scoreboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A53C14B12FAECDFC00355C98 /* Hearts_ScoreboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hearts_ScoreboardApp.swift; sourceTree = "<group>"; };
 		A53C14B32FAECDFC00355C98 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -110,6 +111,7 @@
 		A53C14B02FAECDFC00355C98 /* Hearts Scoreboard */ = {
 			isa = PBXGroup;
 			children = (
+				223476C02FB9170600FBF4CF /* Hearts Scoreboard.entitlements */,
 				A53C14EE2FAEF22300355C98 /* ConfettiView.swift */,
 				A53C14EA2FAEF22300355C98 /* GameViewModel.swift */,
 				A53C14EF2FAEF22300355C98 /* HandRowView.swift */,
@@ -452,6 +454,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Hearts Scoreboard Icon v1";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = "Hearts Scoreboard/Hearts Scoreboard.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Hearts Scoreboard/Preview Content\"";
@@ -482,6 +485,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = "Hearts Scoreboard Icon v1";
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				ASSETCATALOG_COMPILER_INCLUDE_ALL_APPICON_ASSETS = NO;
+				CODE_SIGN_ENTITLEMENTS = "Hearts Scoreboard/Hearts Scoreboard.entitlements";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Hearts Scoreboard/Preview Content\"";
