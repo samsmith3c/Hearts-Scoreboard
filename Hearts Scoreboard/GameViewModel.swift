@@ -4,6 +4,7 @@
 //
 
 import Foundation
+import SwiftData
 
 // MARK: - Data Model
 
@@ -33,6 +34,10 @@ class GameViewModel: ObservableObject {
     @Published var isTieBreaker   = false
     @Published var winner: String? = nil
     @Published var showWinAlert    = false
+
+    // Self-player identity (set by PlayerSetupView via Game Center or manual tap)
+    @Published var selfPlayerIndex: Int?    = nil
+    @Published var gameCenterPlayerID: String? = nil
 
     // MARK: Actions
 
@@ -87,9 +92,37 @@ class GameViewModel: ObservableObject {
         showWinAlert  = false
         gameStarted   = false
         hasActiveGame = false
+        selfPlayerIndex = nil
     }
 
-    // MARK: Private
+    // MARK: - Save to SwiftData
+
+    func saveGame(context: ModelContext) {
+        guard let lowestScore = scores.min(),
+              let winnerIdx   = scores.firstIndex(of: lowestScore) else { return }
+
+        let game = SavedGame()
+        game.date              = Date()
+        game.playerNames       = playerNames
+        game.finalScores       = scores
+        game.selfPlayerIndex   = selfPlayerIndex
+        game.gameCenterPlayerID = gameCenterPlayerID
+        game.winnerIndex       = winnerIdx
+
+        var savedHands: [SavedHand] = []
+        for (i, hand) in hands.enumerated() {
+            let savedHand = SavedHand()
+            savedHand.handNumber      = i
+            savedHand.scores          = hand.values
+            savedHand.isMoonShoot     = hand.moonShooterIndex != nil
+            savedHand.moonShooterIndex = hand.moonShooterIndex
+            savedHand.game            = game
+            savedHands.append(savedHand)
+        }
+        game.hands = savedHands
+
+        context.insert(game)
+    }
 
     // MARK: - Persistence
 
