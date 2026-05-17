@@ -1,0 +1,362 @@
+{
+  "fill-specializations" : [
+    {
+      "value" : {
+        "linear-gradient" : [
+          "display-p3:0.23922,0.41143,0.20784,1.00000",
+          "display-p3:0.10980,0.22745,0.09412,1.00000"
+        ],
+        "orientation" : {
+          "start" : {
+            "x" : 0.5,
+            "y" : 0
+          },
+          "stop" : {
+            "x" : 0.5,
+            "y" : 0.7
+          }
+        }
+      }
+    },
+    {
+      "appearance" : "dark",
+      "value" : {
+        "linear-gradient" : [
+          "display-p3:0.10196,0.18824,0.09412,1.00000",
+          "display-p3:0.02353,0.12562,0.01961,1.00000"
+        ],
+        "orientation" : {
+          "start" : {
+            "x" : 0.5,
+            "y" : 0
+          },
+          "stop" : {
+            "x" : 0.5,
+            "y" : 0.7
+          }
+        }
+      }
+    }
+  ],
+  "groups" : [
+    {
+      "layers" : [
+        {
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "gray:0.75000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "gray:0.25000,1.00000"
+              }
+            }
+          ],
+          "image-name" : "Hearts Scoreboard Title Background.png",
+          "name" : "Background",
+          "opacity-specializations" : [
+            {
+              "value" : 0.1
+            },
+            {
+              "appearance" : "dark",
+              "value" : 0.2
+            }
+          ],
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              0,
+              -382.5
+            ]
+          }
+        },
+        {
+          "blend-mode" : "plus-lighter",
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "srgb:1.00000,0.72157,0.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "srgb:1.00000,0.89804,0.00000,1.00000"
+              }
+            }
+          ],
+          "glass" : true,
+          "image-name" : "Hearts Scoreboard Title Foreground.png",
+          "name" : "Foreground",
+          "position" : {
+            "scale" : 0.4,
+            "translation-in-points" : [
+              0,
+              -382.5
+            ]
+          }
+        }
+      ],
+      "name" : "Scoreboard",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "layers" : [
+        {
+          "blend-mode" : "overlay",
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "display-p3:0.80000,0.00000,0.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "display-p3:0.86667,0.00000,0.00000,1.00000"
+              }
+            }
+          ],
+          "glass" : true,
+          "image-name" : "heart.fill 3.png",
+          "name" : "heart.fill 3",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              210,
+              78
+            ]
+          }
+        },
+        {
+          "blend-mode" : "overlay",
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "display-p3:0.80000,0.00000,0.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "display-p3:0.86667,0.00000,0.00000,1.00000"
+              }
+            }
+          ],
+          "glass" : true,
+          "image-name" : "heart.fill 3.png",
+          "name" : "heart.fill 3",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -210,
+              78
+            ]
+          }
+        },
+        {
+          "image-name" : "capsule.portrait.fill 4.png",
+          "name" : "capsule.portrait.fill 4",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -210,
+              -208
+            ]
+          }
+        },
+        {
+          "image-name" : "capsule.portrait.fill 4.png",
+          "name" : "capsule.portrait.fill 4",
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              210,
+              -208
+            ]
+          }
+        },
+        {
+          "blend-mode" : "normal",
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "gray:0.50000,1.00000"
+              }
+            }
+          ],
+          "image-name" : "capsule.portrait.fill 3.png",
+          "name" : "capsule.portrait.fill 3",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -210,
+              -208
+            ]
+          }
+        },
+        {
+          "blend-mode" : "normal",
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "gray:0.50000,1.00000"
+              }
+            }
+          ],
+          "image-name" : "capsule.portrait.fill 3.png",
+          "name" : "capsule.portrait.fill 3",
+          "opacity" : 1,
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              210,
+              -208
+            ]
+          }
+        }
+      ],
+      "name" : "Hearts",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "layers" : [
+        {
+          "blend-mode" : "normal",
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "gray:0.75000,1.00000"
+              }
+            }
+          ],
+          "image-name" : "rectangle.portrait.fill 3.png",
+          "name" : "rectangle.portrait.fill 3",
+          "opacity" : 0.75,
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              -210,
+              82
+            ]
+          }
+        },
+        {
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "srgb:1.00000,1.00000,1.00000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "gray:0.75000,1.00000"
+              }
+            }
+          ],
+          "image-name" : "rectangle.portrait.fill 3.png",
+          "name" : "rectangle.portrait.fill 3",
+          "opacity" : 0.75,
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              210,
+              82
+            ]
+          }
+        }
+      ],
+      "name" : "Score Cards",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    },
+    {
+      "layers" : [
+        {
+          "fill-specializations" : [
+            {
+              "value" : {
+                "solid" : "gray:0.85000,1.00000"
+              }
+            },
+            {
+              "appearance" : "dark",
+              "value" : {
+                "solid" : "gray:0.35318,1.00000"
+              }
+            }
+          ],
+          "image-name" : "rectangle.fill 5.png",
+          "name" : "rectangle.fill 5",
+          "opacity" : 0.7,
+          "position" : {
+            "scale" : 1,
+            "translation-in-points" : [
+              0,
+              82
+            ]
+          }
+        }
+      ],
+      "name" : "Board",
+      "shadow" : {
+        "kind" : "neutral",
+        "opacity" : 0.5
+      },
+      "translucency" : {
+        "enabled" : true,
+        "value" : 0.5
+      }
+    }
+  ],
+  "supported-platforms" : {
+    "circles" : [
+      "watchOS"
+    ],
+    "squares" : "shared"
+  }
+}
