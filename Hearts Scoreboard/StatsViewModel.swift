@@ -54,7 +54,7 @@ struct StatsViewModel {
 
             let maxScore = game.finalScores.prefix(count).max() ?? 0
             let moonsPerPlayer = moonCounts(in: game)
-            let totalHands = game.hands.count
+            let totalHands = game.hands?.count ?? 0
 
             for i in 0..<count {
                 let key = identityKey(for: i, in: game)
@@ -95,7 +95,7 @@ struct StatsViewModel {
 
     private func moonCounts(in game: SavedGame) -> [Int: Int] {
         var counts: [Int: Int] = [:]
-        for hand in game.hands where hand.isMoonShoot {
+        for hand in (game.hands ?? []) where hand.isMoonShoot {
             if let idx = hand.moonShooterIndex {
                 counts[idx, default: 0] += 1
             }

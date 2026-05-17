@@ -14,4 +14,18 @@ class SavedHand {
     var isMoonShoot: Bool = false
     var moonShooterIndex: Int? = nil
     var game: SavedGame? = nil
+
+    init(
+        handNumber: Int = 0,
+        scores: [Int] = [],
+        isMoonShoot: Bool = false,
+        moonShooterIndex: Int? = nil,
+        game: SavedGame? = nil
+    ) {
+        self.handNumber = handNumber
+        self.scores = scores
+        self.isMoonShoot = isMoonShoot
+        self.moonShooterIndex = moonShooterIndex
+        self.game = game
+    }
 }

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		223476C52FB9246300FBF4CF /* SavedGame.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223476C12FB9246300FBF4CF /* SavedGame.swift */; };
+		223476C62FB9246300FBF4CF /* StatsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223476C42FB9246300FBF4CF /* StatsViewModel.swift */; };
+		223476C72FB9246300FBF4CF /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223476C32FB9246300FBF4CF /* StatsView.swift */; };
+		223476C82FB9246300FBF4CF /* SavedHand.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223476C22FB9246300FBF4CF /* SavedHand.swift */; };
 		A53C14B22FAECDFC00355C98 /* Hearts_ScoreboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14B12FAECDFC00355C98 /* Hearts_ScoreboardApp.swift */; };
 		A53C14B42FAECDFC00355C98 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14B32FAECDFC00355C98 /* ContentView.swift */; };
 		A53C14B62FAECDFC00355C98 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14B52FAECDFC00355C98 /* Item.swift */; };
@@ -43,6 +47,11 @@
 
 /* Begin PBXFileReference section */
 		223476C02FB9170600FBF4CF /* Hearts Scoreboard.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Hearts Scoreboard.entitlements"; sourceTree = "<group>"; };
+		223476C12FB9246300FBF4CF /* SavedGame.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedGame.swift; sourceTree = "<group>"; };
+		223476C22FB9246300FBF4CF /* SavedHand.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedHand.swift; sourceTree = "<group>"; };
+		223476C32FB9246300FBF4CF /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
+		223476C42FB9246300FBF4CF /* StatsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsViewModel.swift; sourceTree = "<group>"; };
+		223476C92FB9290600FBF4CF /* Hearts-Scoreboard-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "Hearts-Scoreboard-Info.plist"; sourceTree = SOURCE_ROOT; };
 		A53C14AE2FAECDFC00355C98 /* Hearts Scoreboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hearts Scoreboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A53C14B12FAECDFC00355C98 /* Hearts_ScoreboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hearts_ScoreboardApp.swift; sourceTree = "<group>"; };
 		A53C14B32FAECDFC00355C98 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -111,6 +120,11 @@
 		A53C14B02FAECDFC00355C98 /* Hearts Scoreboard */ = {
 			isa = PBXGroup;
 			children = (
+				223476C92FB9290600FBF4CF /* Hearts-Scoreboard-Info.plist */,
+				223476C12FB9246300FBF4CF /* SavedGame.swift */,
+				223476C22FB9246300FBF4CF /* SavedHand.swift */,
+				223476C32FB9246300FBF4CF /* StatsView.swift */,
+				223476C42FB9246300FBF4CF /* StatsViewModel.swift */,
 				223476C02FB9170600FBF4CF /* Hearts Scoreboard.entitlements */,
 				A53C14EE2FAEF22300355C98 /* ConfettiView.swift */,
 				A53C14EA2FAEF22300355C98 /* GameViewModel.swift */,
@@ -289,6 +303,10 @@
 				A53C14B42FAECDFC00355C98 /* ContentView.swift in Sources */,
 				A53C14B62FAECDFC00355C98 /* Item.swift in Sources */,
 				A53C14B22FAECDFC00355C98 /* Hearts_ScoreboardApp.swift in Sources */,
+				223476C52FB9246300FBF4CF /* SavedGame.swift in Sources */,
+				223476C62FB9246300FBF4CF /* StatsViewModel.swift in Sources */,
+				223476C72FB9246300FBF4CF /* StatsView.swift in Sources */,
+				223476C82FB9246300FBF4CF /* SavedHand.swift in Sources */,
 				A53C14F42FAEF22300355C98 /* ConfettiView.swift in Sources */,
 				A53C14F32FAEF22300355C98 /* ScoreboardView.swift in Sources */,
 				A53C14F12FAEF22300355C98 /* ShootingMoonView.swift in Sources */,
@@ -461,6 +479,7 @@
 				DEVELOPMENT_TEAM = 3PMFJURBKR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Hearts-Scoreboard-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -492,6 +511,7 @@
 				DEVELOPMENT_TEAM = 3PMFJURBKR;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "Hearts-Scoreboard-Info.plist";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

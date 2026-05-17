@@ -36,7 +36,9 @@ class GameViewModel: ObservableObject {
     @Published var showWinAlert    = false
 
     // Self-player identity (set by PlayerSetupView via Game Center or manual tap)
-    @Published var selfPlayerIndex: Int?    = nil
+    @Published var selfPlayerIndex: Int? = GameViewModel.loadSelfPlayerIndex() {
+        didSet { saveSelfPlayerIndex() }
+    }
     @Published var gameCenterPlayerID: String? = nil
 
     // MARK: Actions
@@ -92,7 +94,7 @@ class GameViewModel: ObservableObject {
         showWinAlert  = false
         gameStarted   = false
         hasActiveGame = false
-        selfPlayerIndex = nil
+        // selfPlayerIndex intentionally preserved — remembers your seat across games
     }
 
     // MARK: - Save to SwiftData
@@ -128,12 +130,18 @@ class GameViewModel: ObservableObject {
 
     // MARK: - Persistence
 
-    private static let namesKey       = "hearts.playerNames"
-    private static let targetScoreKey = "hearts.targetScore"
+    private static let namesKey           = "hearts.playerNames"
+    private static let targetScoreKey     = "hearts.targetScore"
+    private static let selfPlayerIndexKey = "hearts.selfPlayerIndex"
 
     private func savePreferences() {
         UserDefaults.standard.set(playerNames, forKey: Self.namesKey)
         UserDefaults.standard.set(targetScore, forKey: Self.targetScoreKey)
+    }
+
+    private func saveSelfPlayerIndex() {
+        // -1 sentinel = explicitly "no self designated"
+        UserDefaults.standard.set(selfPlayerIndex ?? -1, forKey: Self.selfPlayerIndexKey)
     }
 
     private static func loadNames() -> [String] {
@@ -144,6 +152,15 @@ class GameViewModel: ObservableObject {
     private static func loadTargetScore() -> Int {
         let saved = UserDefaults.standard.integer(forKey: targetScoreKey)
         return [50, 75, 100].contains(saved) ? saved : 100
+    }
+
+    private static func loadSelfPlayerIndex() -> Int? {
+        // Missing key = first launch → default to Player 1 (index 0)
+        guard UserDefaults.standard.object(forKey: selfPlayerIndexKey) != nil else {
+            return 0
+        }
+        let value = UserDefaults.standard.integer(forKey: selfPlayerIndexKey)
+        return (0...3).contains(value) ? value : nil
     }
 
     // MARK: - Win Condition

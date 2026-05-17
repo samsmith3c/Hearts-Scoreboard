@@ -89,7 +89,11 @@ struct HandRowView: View {
     private func startEditing() {
         editValues = hand.map { String($0) }
         isEditing = true
-        focusedField = 0
+        // Defer focus assignment so SwiftUI binds the field that just
+        // appeared this render pass before we try to focus it.
+        DispatchQueue.main.async {
+            focusedField = 0
+        }
     }
 
     private func handleSave() {
@@ -111,7 +115,11 @@ struct HandRowView: View {
 
         onSave(finalValues, moonIdx)
         isEditing = false
-        focusedField = nil
+        // Same defer pattern — onSave + isEditing both mutate state in
+        // this render pass, so the focus reset has to wait its turn.
+        DispatchQueue.main.async {
+            focusedField = nil
+        }
     }
 }
 

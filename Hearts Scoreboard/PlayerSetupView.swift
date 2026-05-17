@@ -10,6 +10,7 @@ struct PlayerSetupView: View {
     @ObservedObject var viewModel: GameViewModel
     @FocusState private var focusedField: Int?
     @State private var showNewGameConfirmation = false
+    @State private var showNoSelfWarning = false
     @State private var showStats = false
 
     private var allFieldsFilled: Bool {
@@ -53,10 +54,55 @@ struct PlayerSetupView: View {
                 // Form — capped width so it doesn't stretch across an iPad
                 VStack(spacing: 24) {
                     // Player name fields
-                    VStack(spacing: 14) {
-                        ForEach(0..<4) { i in
-                            playerField(index: i)
+                    VStack(spacing: 8) {
+                        Text("Players")
+                            .font(.caption)
+                            .fontWeight(.semibold)
+                            .foregroundColor(.white.opacity(0.6))
+                            .frame(maxWidth: .infinity, alignment: .center)
+
+                        VStack(spacing: 14) {
+                            ForEach(0..<4) { i in
+                                playerField(index: i)
+                            }
                         }
+                        .toolbar {
+                            ToolbarItemGroup(placement: .keyboard) {
+                                Button {
+                                    DispatchQueue.main.async {
+                                        focusedField = max(0, (focusedField ?? 0) - 1)
+                                    }
+                                } label: {
+                                    Image(systemName: "chevron.left")
+                                }
+                                .disabled((focusedField ?? 0) == 0)
+
+                                Button {
+                                    DispatchQueue.main.async {
+                                        focusedField = min(3, (focusedField ?? 0) + 1)
+                                    }
+                                } label: {
+                                    Image(systemName: "chevron.right")
+                                }
+                                .disabled((focusedField ?? 0) == 3)
+
+                                Spacer()
+
+                                Button("Done") {
+                                    DispatchQueue.main.async { focusedField = nil }
+                                }
+                            }
+                        }
+
+                        HStack(spacing: 4) {
+                            Text("tap")
+                            Image(systemName: "person.fill")
+                            Text("to mark yourself")
+                        }
+                        .font(.caption)
+                        .foregroundColor(.white.opacity(0.45))
+                        .frame(maxWidth: .infinity, alignment: .center)
+                        .padding(.top, 4)
                     }
 
                     // Target score picker
@@ -65,7 +111,7 @@ struct PlayerSetupView: View {
                             .font(.caption)
                             .fontWeight(.semibold)
                             .foregroundColor(.white.opacity(0.6))
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .frame(maxWidth: .infinity, alignment: .center)
 
                         Picker("Target Score", selection: $viewModel.targetScore) {
                             Text("50").tag(50)
@@ -74,15 +120,12 @@ struct PlayerSetupView: View {
                         }
                         .pickerStyle(.segmented)
                     }
+                    .padding(.top, 16)
 
                     // Start Game button
                     Button {
-                        focusedField = nil
-                        if viewModel.hasActiveGame {
-                            showNewGameConfirmation = true
-                        } else {
-                            viewModel.startGame()
-                        }
+                        DispatchQueue.main.async { focusedField = nil }
+                        attemptStart()
                     } label: {
                         Text("Start New Game")
                             .font(.headline)
@@ -116,33 +159,40 @@ struct PlayerSetupView: View {
             }
         }
         .alert("Abandon current game?", isPresented: $showNewGameConfirmation) {
-            Button("Start New Game", role: .destructive) { viewModel.startGame() }
+            Button("Start New Game", role: .destructive) { checkTrackingThenStart() }
             Button("Cancel", role: .cancel) { }
         } message: {
             Text("Your current game progress will be lost.")
         }
+        .alert("Not tracking this game?", isPresented: $showNoSelfWarning) {
+            Button("Continue") { viewModel.startGame() }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text("You're about to start a game that you're not going to track. Are you sure you'd like to continue?")
+        }
         .sheet(isPresented: $showStats) {
             StatsView()
         }
-        .toolbar {
-            ToolbarItemGroup(placement: .keyboard) {
-                Button { focusedField = max(0, (focusedField ?? 0) - 1) } label: {
-                    Image(systemName: "chevron.left")
-                }
-                .disabled((focusedField ?? 0) == 0)
-
-                Button { focusedField = min(3, (focusedField ?? 0) + 1) } label: {
-                    Image(systemName: "chevron.right")
-                }
-                .disabled((focusedField ?? 0) == 3)
-
-                Spacer()
-
-                Button("Done") { focusedField = nil }
-            }
-        }
         .onAppear {
             authenticateGameCenter()
+        }
+    }
+
+    // MARK: - Start flow
+
+    private func attemptStart() {
+        if viewModel.hasActiveGame {
+            showNewGameConfirmation = true
+        } else {
+            checkTrackingThenStart()
+        }
+    }
+
+    private func checkTrackingThenStart() {
+        if viewModel.selfPlayerIndex == nil {
+            showNoSelfWarning = true
+        } else {
+            viewModel.startGame()
         }
     }
 
@@ -180,7 +230,9 @@ struct PlayerSetupView: View {
                 .focused($focusedField, equals: i)
                 .submitLabel(i < 3 ? .next : .done)
                 .onSubmit {
-                    focusedField = i < 3 ? i + 1 : nil
+                    DispatchQueue.main.async {
+                        focusedField = i < 3 ? i + 1 : nil
+                    }
                 }
                 .onChange(of: viewModel.playerNames[i]) { _, newValue in
                     if newValue.count > 10 {
@@ -198,14 +250,14 @@ struct PlayerSetupView: View {
             guard GKLocalPlayer.local.isAuthenticated else { return }
             DispatchQueue.main.async {
                 vm.gameCenterPlayerID = GKLocalPlayer.local.playerID
-                // Only pre-fill if no self-player has been designated yet
-                guard vm.selfPlayerIndex == nil else { return }
-                let gcName = GKLocalPlayer.local.displayName
-                let targetIdx = vm.playerNames.firstIndex {
-                    $0.trimmingCharacters(in: .whitespaces).isEmpty
-                } ?? 0
-                vm.playerNames[targetIdx] = gcName
-                vm.selfPlayerIndex = targetIdx
+                // Fill the currently-designated self slot with the GC display
+                // name only if that slot is empty — don't overwrite a name the
+                // user already typed.
+                guard let idx = vm.selfPlayerIndex,
+                      vm.playerNames.indices.contains(idx),
+                      vm.playerNames[idx].trimmingCharacters(in: .whitespaces).isEmpty
+                else { return }
+                vm.playerNames[idx] = GKLocalPlayer.local.displayName
             }
         }
     }

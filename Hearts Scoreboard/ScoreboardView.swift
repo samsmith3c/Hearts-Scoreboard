@@ -219,23 +219,6 @@ struct ScoreboardView: View {
                 }
             }
             .scrollDismissesKeyboard(.interactively)
-            .toolbar {
-                ToolbarItemGroup(placement: .keyboard) {
-                    Button { focusedInput = max(0, (focusedInput ?? 0) - 1) } label: {
-                        Image(systemName: "chevron.left")
-                    }
-                    .disabled((focusedInput ?? 0) == 0)
-
-                    Button { focusedInput = min(3, (focusedInput ?? 0) + 1) } label: {
-                        Image(systemName: "chevron.right")
-                    }
-                    .disabled((focusedInput ?? 0) == 3)
-
-                    Spacer()
-
-                    Button("Done") { focusedInput = nil }
-                }
-            }
         }
     }
 
@@ -299,6 +282,33 @@ struct ScoreboardView: View {
         .padding(.horizontal, 12)
         .onSubmit {
             if canCommit { handleCommitTap() }
+        }
+        .toolbar {
+            ToolbarItemGroup(placement: .keyboard) {
+                Button {
+                    DispatchQueue.main.async {
+                        focusedInput = max(0, (focusedInput ?? 0) - 1)
+                    }
+                } label: {
+                    Image(systemName: "chevron.left")
+                }
+                .disabled((focusedInput ?? 0) == 0)
+
+                Button {
+                    DispatchQueue.main.async {
+                        focusedInput = min(3, (focusedInput ?? 0) + 1)
+                    }
+                } label: {
+                    Image(systemName: "chevron.right")
+                }
+                .disabled((focusedInput ?? 0) == 3)
+
+                Spacer()
+
+                Button("Done") {
+                    DispatchQueue.main.async { focusedInput = nil }
+                }
+            }
         }
     }
 
@@ -373,7 +383,12 @@ struct ScoreboardView: View {
     private func doCommit(_ values: [Int], moonShooterIndex: Int? = nil) {
         viewModel.commitHand(values, moonShooterIndex: moonShooterIndex)
         inputValues = ["", "", "", ""]
-        focusedInput = nil
+        // Defer focus change to next runloop tick so SwiftUI doesn't drop
+        // the @FocusState update during the same render pass that mutates
+        // inputValues + commits the hand to the view model.
+        DispatchQueue.main.async {
+            focusedInput = nil
+        }
     }
 }
 
