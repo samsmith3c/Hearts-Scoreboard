@@ -12,8 +12,11 @@ import {
 
 export const config = { runtime: "edge" };
 
-// Replace with the real App Store link (plan step 8).
-const APP_STORE_URL = "https://apps.apple.com/app/idPENDING";
+// TODO(release): replace with the app's real App Store link
+// (https://apps.apple.com/app/id<AppleID>) once the App Store Connect record
+// exists — tracked as PR #1 checklist item 8. Placeholder for now so the
+// install button is testable.
+const APP_STORE_URL = "https://www.apple.com/app-store/";
 
 function ogTitle(p: SharePayload): string {
   return `♥ Hearts: ${p.n[p.w]} wins with ${p.s[p.w]}!`;
