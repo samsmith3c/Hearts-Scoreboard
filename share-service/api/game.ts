@@ -101,11 +101,9 @@ export default function handler(req: Request): Response {
   .player.winner .score { color: #4CD964; }
   .hand { display: flex; margin-top: 6px; }
   .hand span { flex: 1; text-align: center; font-size: 13px; color: rgba(255,255,255,0.75); }
-  h1 { font-size: 20px; margin: 24px 0 8px; text-align: center; }
-  p.sub { color: rgba(255,255,255,0.7); font-size: 14px; margin: 0 0 20px; text-align: center; }
   a.install {
-    display: inline-block; background: #4CD964; color: #1a3517;
-    font-weight: 600; text-decoration: none;
+    display: inline-block; background: #C8102E; color: #fff;
+    font-weight: 600; text-decoration: none; margin-top: 28px;
     padding: 12px 28px; border-radius: 24px; font-size: 16px;
   }
 </style>
@@ -118,8 +116,6 @@ export default function handler(req: Request): Response {
     <div class="divider"></div>
     ${handRows}
   </div>
-  <h1>${title}</h1>
-  <p class="sub">Get Hearts Score to save this game to your own history and stats — then tap the shared link again.</p>
   <a class="install" href="${APP_STORE_URL}">Get the App</a>
 </body>
 </html>`;
