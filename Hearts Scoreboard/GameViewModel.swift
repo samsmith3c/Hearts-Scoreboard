@@ -110,6 +110,9 @@ class GameViewModel: ObservableObject {
         game.selfPlayerIndex   = selfPlayerIndex
         game.gameCenterPlayerID = gameCenterPlayerID
         game.winnerIndex       = winnerIdx
+        // Assigned exactly once here and never regenerated — share-link dedupe
+        // depends on this ID staying constant for the life of the record.
+        game.shareID           = UUID()
 
         var savedHands: [SavedHand] = []
         for (i, hand) in hands.enumerated() {
