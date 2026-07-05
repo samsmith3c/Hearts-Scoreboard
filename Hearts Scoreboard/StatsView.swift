@@ -495,6 +495,14 @@ struct GameDetailView: View {
         }
     }
 
+    /// Pre-v1.3 games have no shareID; assign one the first time the game is
+    /// opened for sharing. Once set it is never regenerated (dedupe key).
+    private func backfillShareIDIfNeeded() {
+        if mode == .ownHistory && game.shareID == nil {
+            game.shareID = UUID()
+        }
+    }
+
     private func setSelf(to index: Int?) {
         if game.selfPlayerIndex == index {
             // Tapping the already-marked icon clears it
@@ -592,11 +600,21 @@ struct GameDetailView: View {
             .toolbarColorScheme(.dark, for: .navigationBar)
             .navigationBarBackground()
             .toolbar {
+                if mode == .ownHistory,
+                   let shareURL = SharePayload(game: game)?.shareURL() {
+                    ToolbarItem(placement: .navigationBarLeading) {
+                        ShareLink(item: shareURL) {
+                            Image(systemName: "square.and.arrow.up")
+                                .foregroundColor(.white)
+                        }
+                    }
+                }
                 ToolbarItem(placement: .navigationBarTrailing) {
                     Button("Done") { doneTapped() }
                         .foregroundColor(.white)
                 }
             }
+            .onAppear { backfillShareIDIfNeeded() }
             .alert(
                 "Are you sure you don't want to save this game's results?",
                 isPresented: $showDiscardConfirm
@@ -614,9 +632,9 @@ struct GameDetailView: View {
 }
 
 // What's next:
-// - Step 10: ShareLink in the top-left toolbar slot (own-history mode only).
 // - Step 12: present GameDetailView(game:payload.makeSavedGame(), mode: .incomingShare)
 //   from the Universal Link handler when the shareID is new.
+// - Step 16: ShareLink on the game-end popup for immediate sharing.
 
 // MARK: - Navigation bar tint helper
 
