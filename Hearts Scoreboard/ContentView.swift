@@ -6,12 +6,17 @@
 //
 
 import SwiftUI
+import SwiftData
 
 // MARK: - App Entry Point
 
 struct ContentView: View {
     @StateObject private var viewModel = GameViewModel()
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
+    @Environment(\.modelContext) private var modelContext
+
+    @State private var incomingGame: SavedGame? = nil
+    @State private var incomingMode: GameDetailMode = .incomingShare
 
     var body: some View {
         Group {
@@ -27,8 +32,40 @@ struct ContentView: View {
                 ? dynamicTypeSize.stepped(by: 2)
                 : dynamicTypeSize
         )
+        .onOpenURL { handleIncomingURL($0) }
+        .fullScreenCover(item: $incomingGame) { game in
+            GameDetailView(game: game, mode: incomingMode)
+        }
+    }
+
+    /// Handles an incoming recap Universal Link. If a game with the same
+    /// shareID is already saved (the link was opened before, or you were the
+    /// sharer), open that record directly instead of re-importing — this is
+    /// the duplicate-link protection. Otherwise run the claim flow on a
+    /// not-yet-persisted copy; it is only inserted if the recipient claims a
+    /// player and taps Done.
+    private func handleIncomingURL(_ url: URL) {
+        guard let payload = SharePayload(url: url),
+              let uuid = UUID(uuidString: payload.id) else { return }
+
+        var descriptor = FetchDescriptor<SavedGame>(
+            predicate: #Predicate { $0.shareID == uuid }
+        )
+        descriptor.fetchLimit = 1
+
+        if let existing = try? modelContext.fetch(descriptor).first {
+            incomingMode = .ownHistory
+            incomingGame = existing
+        } else {
+            incomingMode = .incomingShare
+            incomingGame = payload.makeSavedGame()
+        }
     }
 }
+
+// What's next:
+// - Step 14: end-to-end test — simulator `xcrun simctl openurl` with a real
+//   share link to exercise both the new-game and duplicate paths.
 
 // MARK: - DynamicTypeSize Helpers
 
