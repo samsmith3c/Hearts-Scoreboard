@@ -33,6 +33,9 @@ struct SharePayload: Codable, Equatable {
     var id: String
     /// Game date as Unix seconds.
     var d: Int
+    /// Sharer's UTC offset in minutes at game time, so the web recap can show
+    /// the wall-clock time the game was played. Optional for forward compat.
+    var z: Int?
     /// Player names, seat order.
     var n: [String]
     /// Final cumulative scores, same order.
@@ -48,6 +51,7 @@ struct SharePayload: Codable, Equatable {
         guard let shareID = game.shareID else { return nil }
         self.id = shareID.uuidString.lowercased()
         self.d = Int(game.date.timeIntervalSince1970)
+        self.z = TimeZone.current.secondsFromGMT(for: game.date) / 60
         self.n = game.playerNames
         self.s = game.finalScores
         self.w = game.winnerIndex

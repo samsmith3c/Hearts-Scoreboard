@@ -1,0 +1,14 @@
+{
+  "name": "hearts-share-service",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Recap-sharing web service for Hearts Score: AASA hosting, fallback recap page, and og:image rendering.",
+  "dependencies": {
+    "@vercel/og": "^0.6.8",
+    "react": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "typescript": "^5.6.3"
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "rewrites": [
+    { "source": "/g/:payload", "destination": "/api/game?p=:payload" },
+    { "source": "/og/:payload", "destination": "/api/og?p=:payload" }
+  ],
+  "headers": [
+    {
+      "source": "/.well-known/apple-app-site-association",
+      "headers": [
+        { "key": "Content-Type", "value": "application/json" },
+        { "key": "Cache-Control", "value": "public, max-age=3600" }
+      ]
+    }
+  ]
+}

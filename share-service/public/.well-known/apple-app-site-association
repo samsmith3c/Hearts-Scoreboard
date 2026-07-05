@@ -1,0 +1,15 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["3PMFJURBKR.com.github.samsmith3c.Hearts-Scoreboard"],
+        "components": [
+          {
+            "/": "/g/*",
+            "comment": "Recap share links open in the Hearts Score app"
+          }
+        ]
+      }
+    ]
+  }
+}
