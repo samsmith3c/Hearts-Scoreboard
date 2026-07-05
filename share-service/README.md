@@ -18,3 +18,6 @@ Stateless Vercel project backing v1.3 Recap Sharing. Serves three things:
 4. Verify `https://<project>.vercel.app/.well-known/apple-app-site-association` returns the JSON directly (no redirect).
 
 The iOS app's `ShareConfig.baseURL` and Associated Domains entitlement must match the deployed domain.
+
+> **Note:** while v1.3 is in development, the Vercel project's Production Branch is set to `v1.3`. After the v1.3 PR merges, switch it back to `main` (Settings → Environments → Production → Branch Tracking).
+
