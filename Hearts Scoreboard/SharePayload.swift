@@ -11,8 +11,9 @@
 import Foundation
 
 enum ShareConfig {
-    /// Set to the deployed Vercel domain in plan step 9/10.
-    static let baseURL = URL(string: "https://PENDING.vercel.app")!
+    /// Must match the Associated Domains entitlement and the deployed
+    /// share-service project.
+    static let baseURL = URL(string: "https://hearts-scoreboard.vercel.app")!
     /// Path prefix for recap links; must match the AASA `components` pattern
     /// and the share-service rewrite.
     static let gamePathPrefix = "g"
