@@ -459,12 +459,40 @@ struct HandPreviewRow: View {
 
 // MARK: - Game detail (full-screen view of one game)
 
+/// How GameDetailView was reached, which changes what Done means.
+enum GameDetailMode {
+    /// A game already in your history. Done just dismisses; claim edits
+    /// persist directly on the record.
+    case ownHistory
+    /// A game decoded from an incoming share link, not yet persisted.
+    /// Done with a claimed player inserts it into history (counting toward
+    /// stats); Done unclaimed confirms discarding it entirely.
+    case incomingShare
+}
+
 struct GameDetailView: View {
     let game: SavedGame
+    var mode: GameDetailMode = .ownHistory
     @Environment(\.dismiss) private var dismiss
+    @Environment(\.modelContext) private var modelContext
+    @State private var showDiscardConfirm = false
 
     private var sortedHands: [SavedHand] {
         (game.hands ?? []).sorted { $0.handNumber < $1.handNumber }
+    }
+
+    private func doneTapped() {
+        switch mode {
+        case .ownHistory:
+            dismiss()
+        case .incomingShare:
+            if game.selfPlayerIndex != nil {
+                modelContext.insert(game)
+                dismiss()
+            } else {
+                showDiscardConfirm = true
+            }
+        }
     }
 
     private func setSelf(to index: Int?) {
@@ -565,13 +593,30 @@ struct GameDetailView: View {
             .navigationBarBackground()
             .toolbar {
                 ToolbarItem(placement: .navigationBarTrailing) {
-                    Button("Done") { dismiss() }
+                    Button("Done") { doneTapped() }
                         .foregroundColor(.white)
                 }
             }
+            .alert(
+                "Are you sure you don't want to save this game's results?",
+                isPresented: $showDiscardConfirm
+            ) {
+                Button("Don't Save", role: .destructive) { dismiss() }
+                Button("Cancel", role: .cancel) {}
+            } message: {
+                Text("Please select which player you were.")
+            }
         }
+        // A swipe-down would silently discard an incoming game; force the
+        // Done path so the discard confirmation can run.
+        .interactiveDismissDisabled(mode == .incomingShare)
     }
 }
+
+// What's next:
+// - Step 10: ShareLink in the top-left toolbar slot (own-history mode only).
+// - Step 12: present GameDetailView(game:payload.makeSavedGame(), mode: .incomingShare)
+//   from the Universal Link handler when the shareID is new.
 
 // MARK: - Navigation bar tint helper
 
