@@ -22,6 +22,10 @@ struct ScoreboardView: View {
     // Quit confirmation
     @State private var showQuitConfirmation = false
 
+    // Set when the player chooses Share on the win alert; presents the saved
+    // game in GameDetailView, whose toolbar has the ShareLink.
+    @State private var gameToShare: SavedGame? = nil
+
     private let buttonColumnWidth: CGFloat = 44
 
     private var moonAlertTitle: String {
@@ -58,6 +62,17 @@ struct ScoreboardView: View {
                 viewModel.saveGame(context: modelContext)
                 viewModel.resetGame()
             }
+            // Alerts can only hold buttons (no ShareLink), so Share opens the
+            // saved game in GameDetailView, which has the share icon.
+            // resetGame() waits until that cover closes — resetting here would
+            // unmount this view and the cover with it.
+            Button("Share") {
+                showConfetti = false
+                gameToShare = viewModel.saveGame(context: modelContext)
+            }
+        }
+        .fullScreenCover(item: $gameToShare, onDismiss: { viewModel.resetGame() }) { game in
+            GameDetailView(game: game)
         }
         // Quit confirmation alert
         .alert("Quit Game?", isPresented: $showQuitConfirmation) {

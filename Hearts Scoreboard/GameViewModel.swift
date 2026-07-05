@@ -99,9 +99,10 @@ class GameViewModel: ObservableObject {
 
     // MARK: - Save to SwiftData
 
-    func saveGame(context: ModelContext) {
+    @discardableResult
+    func saveGame(context: ModelContext) -> SavedGame? {
         guard let lowestScore = scores.min(),
-              let winnerIdx   = scores.firstIndex(of: lowestScore) else { return }
+              let winnerIdx   = scores.firstIndex(of: lowestScore) else { return nil }
 
         let game = SavedGame()
         game.date              = Date()
@@ -129,6 +130,7 @@ class GameViewModel: ObservableObject {
         game.hands = savedHands
 
         context.insert(game)
+        return game
     }
 
     // MARK: - Persistence
