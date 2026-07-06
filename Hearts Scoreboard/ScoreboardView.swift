@@ -10,7 +10,7 @@ struct ScoreboardView: View {
     @ObservedObject var viewModel: GameViewModel
     @Environment(\.modelContext) private var modelContext
 
-    @State private var inputValues: [String] = ["", "", "", ""]
+    @State private var inputValues: [String]
     @State private var showConfetti      = false
     @State private var showMoonAnimation = false
     @FocusState private var focusedInput: Int?
@@ -26,7 +26,15 @@ struct ScoreboardView: View {
     // game in GameDetailView, whose toolbar has the ShareLink.
     @State private var gameToShare: SavedGame? = nil
 
-    private let buttonColumnWidth: CGFloat = 44
+    init(viewModel: GameViewModel) {
+        self.viewModel = viewModel
+        _inputValues = State(initialValue: Array(repeating: "", count: viewModel.playerCount))
+    }
+
+    private var playerCount: Int { viewModel.playerCount }
+
+    // Narrower edge buttons at 5–6 players buy the score columns more room.
+    private var buttonColumnWidth: CGFloat { playerCount > 4 ? 36 : 44 }
 
     private var moonAlertTitle: String {
         guard let idx = moonShooterIndex else { return "Shoot the Moon?" }
@@ -87,7 +95,7 @@ struct ScoreboardView: View {
             Button("Confirm") { confirmShootTheMoon() }
             Button("Cancel", role: .cancel) { moonShooterIndex = nil }
         } message: {
-            Text("The other 3 players will each receive 26 points.")
+            Text("The other \(playerCount - 1) players will each receive 26 points.")
         }
         .onChange(of: viewModel.showWinAlert) { _, triggered in
             if triggered { showConfetti = true }
@@ -107,7 +115,7 @@ struct ScoreboardView: View {
             }
             .frame(width: buttonColumnWidth)
 
-            ForEach(0..<4) { i in
+            ForEach(0..<playerCount, id: \.self) { i in
                 VStack(spacing: 3) {
                     Text(viewModel.playerNames[i])
                         .font(.subheadline)
@@ -117,7 +125,7 @@ struct ScoreboardView: View {
                         .minimumScaleFactor(0.6)
 
                     Text("\(viewModel.scores[i])")
-                        .font(.title)
+                        .font(playerCount > 4 ? .title2 : .title)
                         .fontWeight(.bold)
                         .foregroundColor(scoreColor(viewModel.scores[i]))
                         .contentTransition(.numericText())
@@ -221,7 +229,6 @@ struct ScoreboardView: View {
                             HandRowView(
                                 hand: viewModel.hands[i].values,
                                 buttonColumnWidth: buttonColumnWidth,
-                                passDirection: passDirectionLabel(for: i),
                                 moonShooterIndex: viewModel.hands[i].moonShooterIndex,
                                 onSave: { values, moonIdx in
                                     viewModel.updateHand(at: i, values: values, moonShooterIndex: moonIdx)
@@ -240,23 +247,21 @@ struct ScoreboardView: View {
 
     // MARK: - Passing Info
 
+    /// 4 players use the classic Left → Right → Across → Keep cycle; every
+    /// other count has no opposite seat, so the cycle is Left → Right → Keep.
     private var passingInfo: (icon: String, label: String) {
-        switch viewModel.hands.count % 4 {
-        case 0: return ("arrow.left",            "Pass Left")
-        case 1: return ("arrow.right",           "Pass Right")
-        case 2: return ("arrow.left.and.right",  "Pass Across")
-        case 3: return ("hand.raised",           "Keep")
-        default: return ("", "")
+        if playerCount == 4 {
+            switch viewModel.hands.count % 4 {
+            case 0: return ("arrow.left",            "Pass Left")
+            case 1: return ("arrow.right",           "Pass Right")
+            case 2: return ("arrow.left.and.right",  "Pass Across")
+            default: return ("hand.raised",          "Keep")
+            }
         }
-    }
-
-    private func passDirectionLabel(for index: Int) -> String {
-        switch index % 4 {
-        case 0: return "👈"
-        case 1: return "👉"
-        case 2: return "👆"
-        case 3: return "✋"
-        default: return ""
+        switch viewModel.hands.count % 3 {
+        case 0: return ("arrow.left",   "Pass Left")
+        case 1: return ("arrow.right",  "Pass Right")
+        default: return ("hand.raised", "Keep")
         }
     }
 
@@ -269,8 +274,8 @@ struct ScoreboardView: View {
                 .hidden()
                 .frame(width: buttonColumnWidth)
 
-            ForEach(0..<4) { i in
-                TextField("0", text: $inputValues[i])
+            ForEach(0..<playerCount, id: \.self) { i in
+                TextField("0", text: inputBinding(i))
                     .keyboardType(.numberPad)
                     .multilineTextAlignment(.center)
                     .font(.body)
@@ -281,9 +286,9 @@ struct ScoreboardView: View {
                     .focused($focusedInput, equals: i)
                     .frame(maxWidth: 100)
                     .frame(maxWidth: .infinity)
-                    .onChange(of: inputValues[i]) { _, newValue in
+                    .onChange(of: inputBinding(i).wrappedValue) { _, newValue in
                         let digitsOnly = newValue.filter { $0.isNumber }
-                        if digitsOnly != newValue { inputValues[i] = digitsOnly }
+                        if digitsOnly != newValue { inputBinding(i).wrappedValue = digitsOnly }
                     }
             }
 
@@ -312,12 +317,12 @@ struct ScoreboardView: View {
 
                 Button {
                     DispatchQueue.main.async {
-                        focusedInput = min(3, (focusedInput ?? 0) + 1)
+                        focusedInput = min(playerCount - 1, (focusedInput ?? 0) + 1)
                     }
                 } label: {
                     Image(systemName: "chevron.right")
                 }
-                .disabled((focusedInput ?? 0) == 3)
+                .disabled((focusedInput ?? 0) == playerCount - 1)
 
                 Spacer()
 
@@ -326,6 +331,15 @@ struct ScoreboardView: View {
                 }
             }
         }
+    }
+
+    /// Index-safe binding — resetGame() flips playerCount back to 4 while this
+    /// view can still render one last pass against a smaller inputValues.
+    private func inputBinding(_ i: Int) -> Binding<String> {
+        Binding(
+            get: { inputValues.indices.contains(i) ? inputValues[i] : "" },
+            set: { if inputValues.indices.contains(i) { inputValues[i] = $0 } }
+        )
     }
 
     private var canCommit: Bool {
@@ -356,7 +370,7 @@ struct ScoreboardView: View {
 
     private func handleCommitTap() {
         let values = inputValues.map { Int($0) ?? 0 }
-        guard values.count == 4 else { return }
+        guard values.count == playerCount else { return }
 
         if let idx = shooterEnteredOwn26(values) {
             moonShooterIndex = idx
@@ -376,20 +390,20 @@ struct ScoreboardView: View {
     /// Pattern A: exactly one player entered 26, all others entered 0.
     private func shooterEnteredOwn26(_ values: [Int]) -> Int? {
         guard values.filter({ $0 == 26 }).count == 1,
-              values.filter({ $0 == 0  }).count == 3 else { return nil }
+              values.filter({ $0 == 0  }).count == values.count - 1 else { return nil }
         return values.firstIndex(of: 26)
     }
 
-    /// Pattern B: exactly three players have 26 and one player has 0.
+    /// Pattern B: every player but one has 26 and that one player has 0.
     private func isAlreadyCorrectMoon(_ values: [Int]) -> Bool {
-        values.filter({ $0 == 26 }).count == 3 &&
+        values.filter({ $0 == 26 }).count == values.count - 1 &&
         values.filter({ $0 == 0  }).count == 1
     }
 
     /// User confirmed Pattern A — invert scores then animate.
     private func confirmShootTheMoon() {
         guard let idx = moonShooterIndex else { return }
-        var adjusted = [Int](repeating: 26, count: 4)
+        var adjusted = [Int](repeating: 26, count: playerCount)
         adjusted[idx] = 0
         doCommit(adjusted, moonShooterIndex: idx)
         moonShooterIndex = nil
@@ -398,7 +412,7 @@ struct ScoreboardView: View {
 
     private func doCommit(_ values: [Int], moonShooterIndex: Int? = nil) {
         viewModel.commitHand(values, moonShooterIndex: moonShooterIndex)
-        inputValues = ["", "", "", ""]
+        inputValues = Array(repeating: "", count: playerCount)
         // Defer focus change to next runloop tick so SwiftUI doesn't drop
         // the @FocusState update during the same render pass that mutates
         // inputValues + commits the hand to the view model.
@@ -408,12 +422,27 @@ struct ScoreboardView: View {
     }
 }
 
-#Preview {
+// What's next:
+// - HandRowView: derive columns + moon patterns from hand.count.
+// - Sanity-check 6-player column widths on the smallest supported iPhone.
+
+#Preview("4 players") {
     let vm = GameViewModel()
     vm.playerNames = ["Alice", "Bob", "Carol", "Dave"]
     vm.startGame()
     vm.commitHand([5, 0, 13, 8])
     vm.commitHand([0, 26, 0, 0])
+    return ScoreboardView(viewModel: vm)
+        .modelContainer(for: SavedGame.self, inMemory: true)
+}
+
+#Preview("6 players") {
+    let vm = GameViewModel()
+    vm.playerCount = 6
+    vm.playerNames = ["Alice", "Bob", "Carol", "Dave", "Erin", "Frank"]
+    vm.startGame()
+    vm.commitHand([5, 0, 13, 8, 0, 0])
+    vm.commitHand([0, 26, 0, 0, 0, 0])
     return ScoreboardView(viewModel: vm)
         .modelContainer(for: SavedGame.self, inMemory: true)
 }

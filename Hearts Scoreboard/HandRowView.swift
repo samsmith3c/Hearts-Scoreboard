@@ -8,24 +8,22 @@ import SwiftUI
 struct HandRowView: View {
     let hand: [Int]
     let buttonColumnWidth: CGFloat
-    let passDirection: String
     let moonShooterIndex: Int?
     let onSave: ([Int], Int?) -> Void
 
     @State private var isEditing = false
-    @State private var editValues: [String] = ["", "", "", ""]
+    @State private var editValues: [String] = []
     @FocusState private var focusedField: Int?
 
     var body: some View {
         HStack(spacing: 4) {
-            // Pass direction — left column mirrors home/x buttons in header
-            Text(passDirection)
-                .font(.caption2)
-                .foregroundColor(.white.opacity(0.45))
-                .frame(width: buttonColumnWidth)
+            // Empty left column keeps score columns aligned with the header
+            // (the current pass direction lives in the bar above the input row)
+            Color.clear
+                .frame(width: buttonColumnWidth, height: 1)
 
             // Score columns
-            ForEach(0..<4) { i in
+            ForEach(0..<hand.count, id: \.self) { i in
                 if isEditing {
                     TextField("0", text: $editValues[i])
                         .keyboardType(.numberPad)
@@ -82,8 +80,8 @@ struct HandRowView: View {
     private var isValidEdit: Bool {
         let vals = editValues.map { Int($0) ?? 0 }
         if vals.reduce(0, +) == 26 { return true }
-        // Moon pattern B (three 26s, one 0) — total 78
-        return vals.filter { $0 == 26 }.count == 3 && vals.filter { $0 == 0 }.count == 1
+        // Moon pattern B (all but one player at 26, one 0)
+        return vals.filter { $0 == 26 }.count == vals.count - 1 && vals.filter { $0 == 0 }.count == 1
     }
 
     private func startEditing() {
@@ -102,14 +100,14 @@ struct HandRowView: View {
         var moonIdx: Int? = nil
 
         // Moon pattern A: shooter entered 26, others 0 → invert
-        if vals.filter({ $0 == 26 }).count == 1 && vals.filter({ $0 == 0 }).count == 3 {
+        if vals.filter({ $0 == 26 }).count == 1 && vals.filter({ $0 == 0 }).count == vals.count - 1 {
             let idx = vals.firstIndex(of: 26)!
-            finalValues = [Int](repeating: 26, count: 4)
+            finalValues = [Int](repeating: 26, count: vals.count)
             finalValues[idx] = 0
             moonIdx = idx
         }
-        // Moon pattern B: three 26s, one 0 → already correct
-        else if vals.filter({ $0 == 26 }).count == 3 && vals.filter({ $0 == 0 }).count == 1 {
+        // Moon pattern B: all but one at 26, one 0 → already correct
+        else if vals.filter({ $0 == 26 }).count == vals.count - 1 && vals.filter({ $0 == 0 }).count == 1 {
             moonIdx = vals.firstIndex(of: 0)
         }
 
@@ -123,13 +121,16 @@ struct HandRowView: View {
     }
 }
 
+// What's next:
+// - StatsView: GameHistoryCard / HandPreviewRow / GameDetailView columns from
+//   the saved game's own player count.
+
 #Preview {
     ZStack {
         feltGreen
         HandRowView(
             hand: [0, 26, 26, 26],
             buttonColumnWidth: 44,
-            passDirection: "👈",
             moonShooterIndex: 0,
             onSave: { _, _ in }
         )

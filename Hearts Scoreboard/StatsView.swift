@@ -383,7 +383,7 @@ struct GameHistoryCard: View {
 
                 // Player names + final scores
                 HStack(spacing: 4) {
-                    ForEach(0..<min(game.playerNames.count, 4), id: \.self) { i in
+                    ForEach(0..<game.playerNames.count, id: \.self) { i in
                         VStack(spacing: 2) {
                             Text(game.playerNames[i])
                                 .font(.caption)
@@ -443,12 +443,12 @@ struct HandPreviewRow: View {
                     .foregroundColor(.white.opacity(0.35))
                     .frame(width: 22, alignment: .leading)
             }
-            ForEach(0..<4, id: \.self) { i in
+            ForEach(0..<hand.scores.count, id: \.self) { i in
                 Group {
                     if hand.isMoonShoot && hand.moonShooterIndex == i {
                         Text("🌙")
                     } else {
-                        Text("\(hand.scores.indices.contains(i) ? hand.scores[i] : 0)")
+                        Text("\(hand.scores[i])")
                             .foregroundColor(.white.opacity(0.75))
                     }
                 }
@@ -536,7 +536,7 @@ struct GameDetailView: View {
                             HStack(spacing: 4) {
                                 Text("")
                                     .frame(width: 22)
-                                ForEach(0..<min(game.playerNames.count, 4), id: \.self) { i in
+                                ForEach(0..<game.playerNames.count, id: \.self) { i in
                                     VStack(spacing: 4) {
                                         Button {
                                             setSelf(to: i)
@@ -634,9 +634,8 @@ struct GameDetailView: View {
 }
 
 // What's next:
-// - Step 12: present GameDetailView(game:payload.makeSavedGame(), mode: .incomingShare)
-//   from the Universal Link handler when the shareID is new.
-// - Step 16: ShareLink on the game-end popup for immediate sharing.
+// - SharePayload + share-service: variable-count wire format so 3/5/6-player
+//   games survive the round trip (share-service redeploys on merge to main).
 
 // MARK: - Navigation bar tint helper
 
