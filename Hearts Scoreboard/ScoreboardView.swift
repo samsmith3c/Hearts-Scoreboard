@@ -120,6 +120,7 @@ struct ScoreboardView: View {
                     .foregroundColor(.white.opacity(0.45))
             }
             .frame(width: buttonColumnWidth)
+            .accessibilityIdentifier("scoreboard.home")
             .tutorialAnchor(.homeButton)
 
             ForEach(0..<playerCount, id: \.self) { i in
@@ -330,6 +331,7 @@ struct ScoreboardView: View {
                     .foregroundColor(canCommit ? .white : .white.opacity(0.25))
             }
             .disabled(!canCommit)
+            .accessibilityIdentifier("scoreboard.commit")
             .frame(width: buttonColumnWidth)
         }
         .padding(.horizontal, 12)
