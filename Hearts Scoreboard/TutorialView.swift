@@ -78,7 +78,7 @@ final class TutorialManager: ObservableObject {
     /// has real UI to point at even on a fresh install with no games. The demo
     /// SavedGame is never inserted into the model context, so it cannot leak
     /// into real history or stats.
-    private(set) var demoViewModel = GameViewModel()
+    private(set) var demoViewModel = GameViewModel(persistsState: false)
     private(set) var demoGame = SavedGame()
     /// Sums to exactly 26 so the running total shows green and "+" is enabled.
     let demoInputValues = ["5", "9", "8", "4"]
@@ -148,11 +148,12 @@ final class TutorialManager: ObservableObject {
     }
 
     private func buildDemoState() {
-        // Built directly rather than via startGame(), which would overwrite
-        // the real saved player names/target score in UserDefaults.
-        let vm = GameViewModel()
+        // persistsState: false — the demo must never write to UserDefaults or
+        // restore (and then overwrite) the user's real in-progress game.
+        let vm = GameViewModel(persistsState: false)
         vm.playerNames = ["Sam", "Madi", "Shaun", "Carson"]
         vm.targetScore = 100
+        vm.startGame()
         vm.commitHand([3, 7, 10, 6])
         vm.commitHand([0, 26, 26, 26], moonShooterIndex: 0)
         vm.commitHand([13, 5, 2, 6])

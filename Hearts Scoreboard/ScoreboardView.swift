@@ -32,18 +32,19 @@ struct ScoreboardView: View {
         self.viewModel = viewModel
         _inputValues = State(
             initialValue: initialInputValues
-                ?? Array(repeating: "", count: viewModel.playerCount)
+                ?? Array(repeating: "", count: viewModel.gamePlayerCount)
         )
     }
 
-    private var playerCount: Int { viewModel.playerCount }
+    private var playerCount: Int { viewModel.gamePlayerCount }
 
     // Narrower edge buttons at 5–6 players buy the score columns more room.
     private var buttonColumnWidth: CGFloat { playerCount > 4 ? 36 : 44 }
 
     private var moonAlertTitle: String {
-        guard let idx = moonShooterIndex else { return "Shoot the Moon?" }
-        return "\(viewModel.playerNames[idx]) shot the moon! 🌙"
+        guard let idx = moonShooterIndex,
+              viewModel.gamePlayerNames.indices.contains(idx) else { return "Shoot the Moon?" }
+        return "\(viewModel.gamePlayerNames[idx]) shot the moon! 🌙"
     }
 
     var body: some View {
@@ -123,19 +124,19 @@ struct ScoreboardView: View {
 
             ForEach(0..<playerCount, id: \.self) { i in
                 VStack(spacing: 3) {
-                    Text(viewModel.playerNames[i])
+                    Text(viewModel.gamePlayerNames[i])
                         .font(.subheadline)
                         .fontWeight(.semibold)
                         .foregroundColor(.white)
                         .lineLimit(1)
                         .minimumScaleFactor(0.6)
 
-                    Text("\(viewModel.scores[i])")
+                    Text("\(viewModel.gameScores[i])")
                         .font(playerCount > 4 ? .title2 : .title)
                         .fontWeight(.bold)
-                        .foregroundColor(scoreColor(viewModel.scores[i]))
+                        .foregroundColor(scoreColor(viewModel.gameScores[i]))
                         .contentTransition(.numericText())
-                        .animation(.spring(duration: 0.4), value: viewModel.scores[i])
+                        .animation(.spring(duration: 0.4), value: viewModel.gameScores[i])
                 }
                 .frame(maxWidth: .infinity)
             }
@@ -157,7 +158,7 @@ struct ScoreboardView: View {
     }
 
     private func scoreColor(_ score: Int) -> Color {
-        let pct = Double(score) / Double(viewModel.targetScore)
+        let pct = Double(score) / Double(viewModel.gameTargetScore)
         if pct >= 0.80 { return Color(hex: "FF6B6B") }
         if pct >= 0.50 { return Color(hex: "FFD93D") }
         return .white
@@ -194,7 +195,7 @@ struct ScoreboardView: View {
                     }
                 }
 
-                if viewModel.isTieBreaker {
+                if viewModel.gameIsTieBreaker {
                     Text("🚨 TIE BREAKER 🚨")
                         .font(.caption)
                         .fontWeight(.bold)
@@ -230,24 +231,24 @@ struct ScoreboardView: View {
             // ── Scrollable hand history ─────────────────────────────────────
             ScrollView {
                 LazyVStack(spacing: 0) {
-                    if viewModel.hands.isEmpty {
+                    if viewModel.gameHands.isEmpty {
                         Text("Completed hands will appear here")
                             .font(.caption)
                             .foregroundColor(.white.opacity(0.3))
                             .padding(.top, 40)
                     } else {
-                        ForEach(Array(viewModel.hands.indices.reversed()), id: \.self) { i in
+                        ForEach(Array(viewModel.gameHands.indices.reversed()), id: \.self) { i in
                             HandRowView(
-                                hand: viewModel.hands[i].values,
+                                hand: viewModel.gameHands[i].values,
                                 buttonColumnWidth: buttonColumnWidth,
                                 passDirection: passDirectionLabel(for: i),
-                                moonShooterIndex: viewModel.hands[i].moonShooterIndex,
+                                moonShooterIndex: viewModel.gameHands[i].moonShooterIndex,
                                 onSave: { values, moonIdx in
                                     viewModel.updateHand(at: i, values: values, moonShooterIndex: moonIdx)
                                 }
                             )
                             // Spotlight target = the topmost (most recent) row
-                            .tutorialAnchor(i == viewModel.hands.count - 1 ? .pastHandRow : nil)
+                            .tutorialAnchor(i == viewModel.gameHands.count - 1 ? .pastHandRow : nil)
                             Rectangle()
                                 .fill(Color.white.opacity(0.07))
                                 .frame(height: 1)
@@ -265,14 +266,14 @@ struct ScoreboardView: View {
     /// other count has no opposite seat, so the cycle is Left → Right → Keep.
     private var passingInfo: (icon: String, label: String) {
         if playerCount == 4 {
-            switch viewModel.hands.count % 4 {
+            switch viewModel.gameHands.count % 4 {
             case 0: return ("arrow.left",            "Pass Left")
             case 1: return ("arrow.right",           "Pass Right")
             case 2: return ("arrow.left.and.right",  "Pass Across")
             default: return ("hand.raised",          "Keep")
             }
         }
-        switch viewModel.hands.count % 3 {
+        switch viewModel.gameHands.count % 3 {
         case 0: return ("arrow.left",   "Pass Left")
         case 1: return ("arrow.right",  "Pass Right")
         default: return ("hand.raised", "Keep")
@@ -458,7 +459,7 @@ struct ScoreboardView: View {
 // - Sanity-check 6-player column widths on the smallest supported iPhone.
 
 #Preview("4 players") {
-    let vm = GameViewModel()
+    let vm = GameViewModel(persistsState: false)
     vm.playerNames = ["Alice", "Bob", "Carol", "Dave"]
     vm.startGame()
     vm.commitHand([5, 0, 13, 8])
@@ -468,7 +469,7 @@ struct ScoreboardView: View {
 }
 
 #Preview("6 players") {
-    let vm = GameViewModel()
+    let vm = GameViewModel(persistsState: false)
     vm.playerCount = 6
     vm.playerNames = ["Alice", "Bob", "Carol", "Dave", "Erin", "Frank"]
     vm.startGame()
