@@ -5,6 +5,7 @@
   "description": "Recap-sharing web service for Hearts Score: AASA hosting, fallback recap page, and og:image rendering.",
   "dependencies": {
     "@vercel/og": "^0.6.8",
+    "fflate": "^0.8.2",
     "react": "^18.3.1"
   },
   "devDependencies": {

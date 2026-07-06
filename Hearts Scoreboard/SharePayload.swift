@@ -3,12 +3,15 @@
 //  Hearts Scoreboard
 //
 //  Wire format for v1.3 recap-sharing links. The entire game travels in the
-//  URL itself (compact JSON → base64url) — the web service is stateless and
-//  stores nothing. The same JSON shape is decoded by share-service (TypeScript),
-//  so any change here is a breaking change there; bump `v` if the shape changes.
+//  URL itself (compact JSON → raw DEFLATE → base64url) — the web service is
+//  stateless and stores nothing. Compression matters: iMessage silently
+//  truncates long URLs, so the link must stay short even for many-hand games.
+//  The same format is decoded by share-service (TypeScript); any change here
+//  is a breaking change there — bump `v` if the shape changes.
 //
 
 import Foundation
+import Compression
 
 enum ShareConfig {
     /// Must match the Associated Domains entitlement and the deployed
@@ -20,13 +23,6 @@ enum ShareConfig {
 }
 
 struct SharePayload: Codable, Equatable {
-
-    struct Hand: Codable, Equatable {
-        /// Per-player scores for the hand, same order as `playerNames`.
-        var s: [Int]
-        /// Moon shooter's player index, if this hand was a shot moon.
-        var m: Int?
-    }
 
     /// Payload format version.
     var v: Int = 1
@@ -43,8 +39,9 @@ struct SharePayload: Codable, Equatable {
     var s: [Int]
     /// Winner (lowest score) index.
     var w: Int
-    /// Hands in play order.
-    var h: [Hand]
+    /// Hands in play order. Each hand is 4 per-player scores, with an optional
+    /// 5th element: the moon shooter's player index.
+    var h: [[Int]]
 
     // MARK: - Build from a saved game
 
@@ -58,17 +55,25 @@ struct SharePayload: Codable, Equatable {
         self.w = game.winnerIndex
         self.h = (game.hands ?? [])
             .sorted { $0.handNumber < $1.handNumber }
-            .map { Hand(s: $0.scores, m: $0.isMoonShoot ? $0.moonShooterIndex : nil) }
+            .map { hand in
+                var arr = Array(hand.scores.prefix(4))
+                while arr.count < 4 { arr.append(0) }
+                if hand.isMoonShoot, let shooter = hand.moonShooterIndex {
+                    arr.append(shooter)
+                }
+                return arr
+            }
     }
 
     // MARK: - URL encoding
 
-    /// base64url (RFC 4648 §5, unpadded) of the compact JSON.
+    /// base64url (RFC 4648 §5, unpadded) of the raw-DEFLATE-compressed JSON.
     func encodedString() -> String? {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
-        guard let json = try? encoder.encode(self) else { return nil }
-        return json.base64EncodedString()
+        guard let json = try? encoder.encode(self),
+              let compressed = json.deflated() else { return nil }
+        return compressed.base64EncodedString()
             .replacingOccurrences(of: "+", with: "-")
             .replacingOccurrences(of: "/", with: "_")
             .replacingOccurrences(of: "=", with: "")
@@ -89,12 +94,14 @@ struct SharePayload: Codable, Equatable {
             .replacingOccurrences(of: "-", with: "+")
             .replacingOccurrences(of: "_", with: "/")
         while base64.count % 4 != 0 { base64 += "=" }
-        guard let data = Data(base64Encoded: base64),
-              let payload = try? JSONDecoder().decode(SharePayload.self, from: data),
+        guard let compressed = Data(base64Encoded: base64),
+              let json = compressed.inflated(),
+              let payload = try? JSONDecoder().decode(SharePayload.self, from: json),
               payload.v == 1,
               UUID(uuidString: payload.id) != nil,
               !payload.n.isEmpty,
-              payload.n.count == payload.s.count
+              payload.n.count == payload.s.count,
+              payload.h.allSatisfy({ $0.count == 4 || $0.count == 5 })
         else { return nil }
         self = payload
     }
@@ -119,12 +126,13 @@ struct SharePayload: Codable, Equatable {
             shareID: UUID(uuidString: id)
         )
         var savedHands: [SavedHand] = []
-        for (i, hand) in h.enumerated() {
+        for (i, arr) in h.enumerated() {
+            let shooter = arr.count == 5 ? arr[4] : nil
             let savedHand = SavedHand(
                 handNumber: i,
-                scores: hand.s,
-                isMoonShoot: hand.m != nil,
-                moonShooterIndex: hand.m,
+                scores: Array(arr.prefix(4)),
+                isMoonShoot: shooter != nil,
+                moonShooterIndex: shooter,
                 game: game
             )
             savedHands.append(savedHand)
@@ -134,8 +142,40 @@ struct SharePayload: Codable, Equatable {
     }
 }
 
+// MARK: - Raw DEFLATE helpers
+// Apple's COMPRESSION_ZLIB is raw DEFLATE (RFC 1951, no zlib header/checksum),
+// matching fflate's deflateSync/inflateSync on the web side.
+
+private extension Data {
+    func deflated() -> Data? {
+        guard !isEmpty else { return nil }
+        return withUnsafeBytes { (src: UnsafeRawBufferPointer) -> Data? in
+            guard let srcPtr = src.bindMemory(to: UInt8.self).baseAddress else { return nil }
+            let capacity = count + 256
+            let dst = UnsafeMutablePointer<UInt8>.allocate(capacity: capacity)
+            defer { dst.deallocate() }
+            let written = compression_encode_buffer(
+                dst, capacity, srcPtr, count, nil, COMPRESSION_ZLIB
+            )
+            return written > 0 ? Data(bytes: dst, count: written) : nil
+        }
+    }
+
+    func inflated(maxSize: Int = 1 << 16) -> Data? {
+        guard !isEmpty else { return nil }
+        return withUnsafeBytes { (src: UnsafeRawBufferPointer) -> Data? in
+            guard let srcPtr = src.bindMemory(to: UInt8.self).baseAddress else { return nil }
+            let dst = UnsafeMutablePointer<UInt8>.allocate(capacity: maxSize)
+            defer { dst.deallocate() }
+            let written = compression_decode_buffer(
+                dst, maxSize, srcPtr, count, nil, COMPRESSION_ZLIB
+            )
+            return written > 0 ? Data(bytes: dst, count: written) : nil
+        }
+    }
+}
+
 // What's next:
-// - share-service decodes this exact JSON shape (plan steps 5–6).
-// - Replace ShareConfig.baseURL placeholder with the deployed Vercel domain (step 9/10).
-// - ShareLink in GameDetailView builds the URL via SharePayload(game:) (step 10).
-// - Incoming Universal Links decode via SharePayload(url:) (step 12).
+// - share-service/lib/payload.ts mirrors this format (fflate inflateSync).
+// - Links generated before compression landed will no longer decode — fine
+//   pre-release; the recap page shows a friendly damaged-link message.

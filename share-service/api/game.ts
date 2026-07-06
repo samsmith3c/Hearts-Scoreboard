@@ -34,9 +34,34 @@ export default function handler(req: Request): Response {
   const payload = decodePayload(encoded);
 
   if (!payload) {
-    return new Response("Invalid or expired game link.", {
+    // Reached when Messages truncated the URL in transit (a known iMessage
+    // issue with long links) or the payload is otherwise malformed.
+    const brokenHtml = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hearts Score — broken link</title>
+<style>
+  body {
+    margin: 0; min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    background: #2D5A27; color: #fff;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    padding: 24px; box-sizing: border-box; text-align: center;
+  }
+  h1 { font-size: 20px; margin: 0 0 8px; }
+  p { color: rgba(255,255,255,0.7); font-size: 15px; max-width: 320px; }
+</style>
+</head>
+<body>
+  <h1>♥ This game link got damaged in transit</h1>
+  <p>Ask the sender to share the game again straight from the Hearts Score app.</p>
+</body>
+</html>`;
+    return new Response(brokenHtml, {
       status: 400,
-      headers: { "Content-Type": "text/plain; charset=utf-8" },
+      headers: { "Content-Type": "text/html; charset=utf-8" },
     });
   }
 

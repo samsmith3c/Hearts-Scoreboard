@@ -1,7 +1,11 @@
 // Mirrors SharePayload.swift in the iOS app — the payload travels entirely in
-// the URL (compact JSON → unpadded base64url). Any shape change must be made
-// in both places and versioned via `v`.
+// the URL (compact JSON → raw DEFLATE → unpadded base64url). Compression keeps
+// links short enough that iMessage doesn't truncate them. Any shape change
+// must be made in both places and versioned via `v`.
 
+import { inflateSync } from "fflate";
+
+/** Normalized hand for rendering (wire format packs each hand as an array). */
 export interface SharedHand {
   /** Per-player scores for the hand, seat order. */
   s: number[];
@@ -24,9 +28,12 @@ export interface SharePayload {
   s: number[];
   /** Winner (lowest score) index. */
   w: number;
-  /** Hands in play order. */
+  /** Hands in play order, normalized from the wire format. */
   h: SharedHand[];
 }
+
+/** Wire shape: hands are arrays of 4 scores + optional 5th moon-shooter index. */
+type WirePayload = Omit<SharePayload, "h"> & { h: number[][] };
 
 const UUID_RE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/;
@@ -35,10 +42,9 @@ export function decodePayload(encoded: string): SharePayload | null {
   try {
     let base64 = encoded.replace(/-/g, "+").replace(/_/g, "/");
     while (base64.length % 4 !== 0) base64 += "=";
-    const json = new TextDecoder().decode(
-      Uint8Array.from(atob(base64), (c) => c.charCodeAt(0)),
-    );
-    const p = JSON.parse(json) as SharePayload;
+    const compressed = Uint8Array.from(atob(base64), (c) => c.charCodeAt(0));
+    const json = new TextDecoder().decode(inflateSync(compressed));
+    const p = JSON.parse(json) as WirePayload;
     if (
       p.v !== 1 ||
       typeof p.id !== "string" ||
@@ -56,12 +62,20 @@ export function decodePayload(encoded: string): SharePayload | null {
       !p.s.every((x) => Number.isInteger(x)) ||
       !p.h.every(
         (hand) =>
-          Array.isArray(hand.s) && hand.s.every((x) => Number.isInteger(x)),
+          Array.isArray(hand) &&
+          (hand.length === 4 || hand.length === 5) &&
+          hand.every((x) => Number.isInteger(x)),
       )
     ) {
       return null;
     }
-    return p;
+    return {
+      ...p,
+      h: p.h.map((hand) => ({
+        s: hand.slice(0, 4),
+        m: hand.length === 5 ? hand[4] : undefined,
+      })),
+    };
   } catch {
     return null;
   }
