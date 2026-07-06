@@ -11,6 +11,7 @@ struct PlayerSetupView: View {
     @FocusState private var focusedField: Int?
     @State private var showNewGameConfirmation = false
     @State private var showNoSelfWarning = false
+    @State private var showCardRemovalPopup = false
     @State private var showStats = false
 
     private var allFieldsFilled: Bool {
@@ -61,11 +62,20 @@ struct PlayerSetupView: View {
                             .foregroundColor(.white.opacity(0.6))
                             .frame(maxWidth: .infinity, alignment: .center)
 
+                        Picker("Players", selection: $viewModel.playerCount) {
+                            ForEach(GameViewModel.allowedPlayerCounts, id: \.self) { count in
+                                Text("\(count)").tag(count)
+                            }
+                        }
+                        .pickerStyle(.segmented)
+                        .padding(.bottom, 6)
+
                         VStack(spacing: 14) {
-                            ForEach(0..<4) { i in
+                            ForEach(0..<viewModel.playerCount, id: \.self) { i in
                                 playerField(index: i)
                             }
                         }
+                        .animation(.easeInOut(duration: 0.2), value: viewModel.playerCount)
                         .toolbar {
                             ToolbarItemGroup(placement: .keyboard) {
                                 Button {
@@ -79,12 +89,12 @@ struct PlayerSetupView: View {
 
                                 Button {
                                     DispatchQueue.main.async {
-                                        focusedField = min(3, (focusedField ?? 0) + 1)
+                                        focusedField = min(viewModel.playerCount - 1, (focusedField ?? 0) + 1)
                                     }
                                 } label: {
                                     Image(systemName: "chevron.right")
                                 }
-                                .disabled((focusedField ?? 0) == 3)
+                                .disabled((focusedField ?? 0) == viewModel.playerCount - 1)
 
                                 Spacer()
 
@@ -165,10 +175,16 @@ struct PlayerSetupView: View {
             Text("Your current game progress will be lost.")
         }
         .alert("Not tracking this game?", isPresented: $showNoSelfWarning) {
-            Button("Continue") { viewModel.startGame() }
+            Button("Continue") { confirmDeckThenStart() }
             Button("Cancel", role: .cancel) { }
         } message: {
             Text("You're about to start a game that you're not going to track. Are you sure you'd like to continue?")
+        }
+        .alert("Prepare the Deck", isPresented: $showCardRemovalPopup) {
+            Button("Start Game") { viewModel.startGame() }
+            Button("Cancel", role: .cancel) { }
+        } message: {
+            Text(cardRemovalMessage(for: viewModel.playerCount))
         }
         .sheet(isPresented: $showStats) {
             StatsView()
@@ -192,7 +208,29 @@ struct PlayerSetupView: View {
         if viewModel.selfPlayerIndex == nil {
             showNoSelfWarning = true
         } else {
+            confirmDeckThenStart()
+        }
+    }
+
+    /// 4 players use a standard deck — start immediately, no popup. Any other
+    /// count needs physical cards pulled first, so show the removal alert.
+    private func confirmDeckThenStart() {
+        if viewModel.playerCount == 4 {
             viewModel.startGame()
+        } else {
+            showCardRemovalPopup = true
+        }
+    }
+
+    /// Which cards to pull so every player is dealt the same number and the
+    /// 2♣ lead stays in the deck. Points are unaffected: no hearts or Q♠ are
+    /// ever removed, so each hand still totals 26.
+    private func cardRemovalMessage(for count: Int) -> String {
+        switch count {
+        case 3: return "For 3 players, please remove the 2♦. Each player will be dealt 17 cards."
+        case 5: return "For 5 players, please remove the 2♦ and 3♣. Each player will be dealt 10 cards."
+        case 6: return "For 6 players, please remove the 2♦, 3♦, 3♣, and 4♣. Each player will be dealt 8 cards."
+        default: return ""
         }
     }
 
@@ -220,7 +258,7 @@ struct PlayerSetupView: View {
             }
             .buttonStyle(.plain)
 
-            TextField("Player \(i + 1) name", text: $viewModel.playerNames[i])
+            TextField("Player \(i + 1) name", text: nameBinding(i))
                 .padding(.horizontal, 12)
                 .padding(.vertical, 10)
                 .background(Color.white.opacity(0.12))
@@ -228,18 +266,27 @@ struct PlayerSetupView: View {
                 .foregroundColor(.white)
                 .textInputAutocapitalization(.words)
                 .focused($focusedField, equals: i)
-                .submitLabel(i < 3 ? .next : .done)
+                .submitLabel(i < viewModel.playerCount - 1 ? .next : .done)
                 .onSubmit {
                     DispatchQueue.main.async {
-                        focusedField = i < 3 ? i + 1 : nil
+                        focusedField = i < viewModel.playerCount - 1 ? i + 1 : nil
                     }
                 }
-                .onChange(of: viewModel.playerNames[i]) { _, newValue in
+                .onChange(of: nameBinding(i).wrappedValue) { _, newValue in
                     if newValue.count > 10 {
                         viewModel.playerNames[i] = String(newValue.prefix(10))
                     }
                 }
         }
+    }
+
+    /// Index-safe binding — a field animating out after the count shrinks can
+    /// still render one pass while its playerNames slot is already gone.
+    private func nameBinding(_ i: Int) -> Binding<String> {
+        Binding(
+            get: { viewModel.playerNames.indices.contains(i) ? viewModel.playerNames[i] : "" },
+            set: { if viewModel.playerNames.indices.contains(i) { viewModel.playerNames[i] = $0 } }
+        )
     }
 
     // MARK: - Game Center authentication
@@ -262,6 +309,10 @@ struct PlayerSetupView: View {
         }
     }
 }
+
+// What's next:
+// - ScoreboardView / HandRowView: variable columns + moon patterns per count.
+// - SharePayload + share-service: hands carry playerCount scores on the wire.
 
 #Preview {
     PlayerSetupView(viewModel: GameViewModel())

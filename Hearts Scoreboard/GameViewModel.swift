@@ -18,9 +18,15 @@ struct Hand: Identifiable {
 
 class GameViewModel: ObservableObject {
 
+    static let allowedPlayerCounts = [3, 4, 5, 6]
+    static let defaultPlayerCount  = 4
+
     // Player info
+    @Published var playerCount: Int = GameViewModel.defaultPlayerCount {
+        didSet { syncPlayerSlots() }
+    }
     @Published var playerNames: [String] = GameViewModel.loadNames()
-    @Published var scores: [Int]         = [0, 0, 0, 0]
+    @Published var scores: [Int]         = Array(repeating: 0, count: GameViewModel.defaultPlayerCount)
 
     // Hand history
     @Published var hands: [Hand] = []
@@ -43,9 +49,22 @@ class GameViewModel: ObservableObject {
 
     // MARK: Actions
 
+    /// Keeps playerNames sized to playerCount and drops a self designation
+    /// that points at a removed seat.
+    private func syncPlayerSlots() {
+        if playerNames.count > playerCount {
+            playerNames = Array(playerNames.prefix(playerCount))
+        } else if playerNames.count < playerCount {
+            playerNames.append(contentsOf: Array(repeating: "", count: playerCount - playerNames.count))
+        }
+        if let selfIdx = selfPlayerIndex, selfIdx >= playerCount {
+            selfPlayerIndex = nil
+        }
+    }
+
     func startGame() {
         playerNames  = playerNames.map { $0.trimmingCharacters(in: .whitespaces) }
-        scores       = [0, 0, 0, 0]
+        scores       = Array(repeating: 0, count: playerCount)
         hands        = []
         winner       = nil
         showWinAlert = false
@@ -64,8 +83,8 @@ class GameViewModel: ObservableObject {
     }
 
     func commitHand(_ values: [Int], moonShooterIndex: Int? = nil) {
-        guard values.count == 4 else { return }
-        for i in 0..<4 {
+        guard values.count == playerCount else { return }
+        for i in 0..<playerCount {
             scores[i] += values[i]
         }
         hands.append(Hand(values: values, moonShooterIndex: moonShooterIndex))
@@ -73,9 +92,9 @@ class GameViewModel: ObservableObject {
     }
 
     func updateHand(at index: Int, values: [Int], moonShooterIndex: Int? = nil) {
-        guard index < hands.count, values.count == 4 else { return }
+        guard index < hands.count, values.count == playerCount else { return }
         hands[index] = Hand(values: values, moonShooterIndex: moonShooterIndex)
-        scores = hands.reduce([0, 0, 0, 0]) { acc, hand in
+        scores = hands.reduce(Array(repeating: 0, count: playerCount)) { acc, hand in
             zip(acc, hand.values).map(+)
         }
         winner       = nil
@@ -85,9 +104,10 @@ class GameViewModel: ObservableObject {
     }
 
     func resetGame() {
+        playerCount   = Self.defaultPlayerCount
         playerNames   = Self.loadNames()
         targetScore   = Self.loadTargetScore()
-        scores        = [0, 0, 0, 0]
+        scores        = Array(repeating: 0, count: Self.defaultPlayerCount)
         hands         = []
         isTieBreaker  = false
         winner        = nil
@@ -118,7 +138,7 @@ class GameViewModel: ObservableObject {
         var savedHands: [SavedHand] = []
         for (i, hand) in hands.enumerated() {
             let isMoon = hand.values.filter({ $0 == 0 }).count == 1
-                      && hand.values.filter({ $0 == 26 }).count == 3
+                      && hand.values.filter({ $0 == 26 }).count == hand.values.count - 1
             let savedHand = SavedHand()
             savedHand.handNumber       = i
             savedHand.scores           = hand.values
@@ -150,8 +170,15 @@ class GameViewModel: ObservableObject {
     }
 
     private static func loadNames() -> [String] {
-        let saved = UserDefaults.standard.stringArray(forKey: namesKey) ?? []
-        return saved.count == 4 ? saved : ["", "", "", ""]
+        // Player count always opens at the default (4), so saved names from a
+        // 3/5/6-player game are padded or trimmed to fit the default slots.
+        var saved = UserDefaults.standard.stringArray(forKey: namesKey) ?? []
+        if saved.count > defaultPlayerCount {
+            saved = Array(saved.prefix(defaultPlayerCount))
+        } else if saved.count < defaultPlayerCount {
+            saved.append(contentsOf: Array(repeating: "", count: defaultPlayerCount - saved.count))
+        }
+        return saved
     }
 
     private static func loadTargetScore() -> Int {
@@ -165,7 +192,9 @@ class GameViewModel: ObservableObject {
             return 0
         }
         let value = UserDefaults.standard.integer(forKey: selfPlayerIndexKey)
-        return (0...3).contains(value) ? value : nil
+        // App always opens at the default player count, so a seat saved from a
+        // 5/6-player game that no longer exists falls back to "not designated".
+        return (0..<defaultPlayerCount).contains(value) ? value : nil
     }
 
     // MARK: - Win Condition
@@ -189,3 +218,7 @@ class GameViewModel: ObservableObject {
         showWinAlert             = true
     }
 }
+
+// What's next:
+// - PlayerSetupView: 3/4/5/6 selector bound to playerCount + card-removal alert.
+// - ScoreboardView / HandRowView: columns and moon patterns driven by playerCount.
