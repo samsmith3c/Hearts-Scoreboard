@@ -12,17 +12,15 @@ struct StatsView: View {
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext
+    @EnvironmentObject private var gameCenter: GameCenterService
     @Query(sort: \SavedGame.date, order: .reverse) private var games: [SavedGame]
 
-    @State private var gcPlayerID: String? = GKLocalPlayer.local.isAuthenticated
-        ? GKLocalPlayer.local.playerID
-        : nil
     @State private var selectedTab: Tab = .stats
     @State private var pendingDelete: SavedGame? = nil
     @State private var selectedGame: SavedGame? = nil
 
     private var myStats: PlayerStats? {
-        guard let id = gcPlayerID else { return nil }
+        guard let id = gameCenter.playerID else { return nil }
         return StatsViewModel()
             .computeStats(games: games)
             .first { $0.gcPlayerID == id }
@@ -53,7 +51,6 @@ struct StatsView: View {
                         .foregroundColor(.white)
                 }
             }
-            .onAppear { ensureGameCenterAuth() }
             .alert("Delete this game?", isPresented: deleteAlertBinding, presenting: pendingDelete) { game in
                 Button("Delete", role: .destructive) {
                     modelContext.delete(game)
@@ -95,7 +92,7 @@ struct StatsView: View {
 
     @ViewBuilder
     private var statsTabContent: some View {
-        if gcPlayerID == nil {
+        if gameCenter.playerID == nil {
             notAuthenticatedState
         } else if let stats = myStats {
             statsContent(stats)
@@ -125,20 +122,6 @@ struct StatsView: View {
                 .padding(.vertical, 12)
                 .frame(maxWidth: 560)
                 .frame(maxWidth: .infinity)
-            }
-        }
-    }
-
-    private func ensureGameCenterAuth() {
-        if GKLocalPlayer.local.isAuthenticated {
-            gcPlayerID = GKLocalPlayer.local.playerID
-            return
-        }
-        GKLocalPlayer.local.authenticateHandler = { _, _ in
-            DispatchQueue.main.async {
-                if GKLocalPlayer.local.isAuthenticated {
-                    self.gcPlayerID = GKLocalPlayer.local.playerID
-                }
             }
         }
     }
@@ -182,7 +165,7 @@ struct StatsView: View {
     // MARK: - Stats content
 
     private func statsContent(_ stats: PlayerStats) -> some View {
-        StatsDetailView(stats: stats, displayName: GKLocalPlayer.local.displayName)
+        StatsDetailView(stats: stats, displayName: gameCenter.displayName)
     }
 }
 
@@ -662,4 +645,5 @@ private extension View {
 
 #Preview {
     StatsView()
+        .environmentObject(GameCenterService())
 }

@@ -8,6 +8,7 @@ import GameKit
 
 struct PlayerSetupView: View {
     @ObservedObject var viewModel: GameViewModel
+    @EnvironmentObject private var gameCenter: GameCenterService
     /// Re-launches the tutorial ("?" button). Defaults to a no-op so previews
     /// and existing call sites don't need to supply one.
     var onShowTutorial: () -> Void = {}
@@ -53,6 +54,10 @@ struct PlayerSetupView: View {
                             .background(Color(hex: "C0392B"))
                             .cornerRadius(20)
                     }
+
+                    // The form below configures a NEW game only — it can't
+                    // touch the game in progress. Make that split explicit.
+                    orDivider
                 }
 
                 // Form — capped width so it doesn't stretch across an iPad
@@ -205,8 +210,31 @@ struct PlayerSetupView: View {
             StatsView()
         }
         .onAppear {
-            authenticateGameCenter()
+            applyGameCenterName()
         }
+        .onChange(of: gameCenter.playerID) { _, _ in
+            applyGameCenterName()
+        }
+    }
+
+    // MARK: - OR divider (shown between Resume and the new-game form)
+
+    private var orDivider: some View {
+        HStack(spacing: 12) {
+            Rectangle()
+                .fill(Color.white.opacity(0.25))
+                .frame(height: 1)
+            Text("OR")
+                .font(.caption)
+                .fontWeight(.semibold)
+                .foregroundColor(.white.opacity(0.5))
+                .fixedSize()
+            Rectangle()
+                .fill(Color.white.opacity(0.25))
+                .frame(height: 1)
+        }
+        .padding(.horizontal, 32)
+        .frame(maxWidth: 480)
     }
 
     // MARK: - Start flow
@@ -305,24 +333,19 @@ struct PlayerSetupView: View {
         )
     }
 
-    // MARK: - Game Center authentication
+    // MARK: - Game Center name autofill
 
-    private func authenticateGameCenter() {
-        let vm = viewModel
-        GKLocalPlayer.local.authenticateHandler = { _, _ in
-            guard GKLocalPlayer.local.isAuthenticated else { return }
-            DispatchQueue.main.async {
-                vm.gameCenterPlayerID = GKLocalPlayer.local.playerID
-                // Fill the currently-designated self slot with the GC display
-                // name only if that slot is empty — don't overwrite a name the
-                // user already typed.
-                guard let idx = vm.selfPlayerIndex,
-                      vm.playerNames.indices.contains(idx),
-                      vm.playerNames[idx].trimmingCharacters(in: .whitespaces).isEmpty
-                else { return }
-                vm.playerNames[idx] = GKLocalPlayer.local.displayName
-            }
-        }
+    /// Fills the currently-designated self slot with the GC display name only
+    /// if that slot is empty — never overwrites a name the user typed.
+    /// Authentication itself is owned by GameCenterService at the app root.
+    private func applyGameCenterName() {
+        guard gameCenter.playerID != nil,
+              let name = gameCenter.displayName,
+              let idx = viewModel.selfPlayerIndex,
+              viewModel.playerNames.indices.contains(idx),
+              viewModel.playerNames[idx].trimmingCharacters(in: .whitespaces).isEmpty
+        else { return }
+        viewModel.playerNames[idx] = name
     }
 }
 
@@ -331,5 +354,6 @@ struct PlayerSetupView: View {
 // - SharePayload + share-service: hands carry playerCount scores on the wire.
 
 #Preview {
-    PlayerSetupView(viewModel: GameViewModel())
+    PlayerSetupView(viewModel: GameViewModel(persistsState: false))
+        .environmentObject(GameCenterService())
 }
