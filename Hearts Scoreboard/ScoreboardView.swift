@@ -229,6 +229,7 @@ struct ScoreboardView: View {
                             HandRowView(
                                 hand: viewModel.hands[i].values,
                                 buttonColumnWidth: buttonColumnWidth,
+                                passDirection: passDirectionLabel(for: i),
                                 moonShooterIndex: viewModel.hands[i].moonShooterIndex,
                                 onSave: { values, moonIdx in
                                     viewModel.updateHand(at: i, values: values, moonShooterIndex: moonIdx)
@@ -262,6 +263,23 @@ struct ScoreboardView: View {
         case 0: return ("arrow.left",   "Pass Left")
         case 1: return ("arrow.right",  "Pass Right")
         default: return ("hand.raised", "Keep")
+        }
+    }
+
+    /// Emoji shorthand for past hands — same cycle as passingInfo.
+    private func passDirectionLabel(for index: Int) -> String {
+        if playerCount == 4 {
+            switch index % 4 {
+            case 0: return "👈"
+            case 1: return "👉"
+            case 2: return "👆"
+            default: return "✋"
+            }
+        }
+        switch index % 3 {
+        case 0: return "👈"
+        case 1: return "👉"
+        default: return "✋"
         }
     }
 

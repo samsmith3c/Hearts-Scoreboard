@@ -8,6 +8,7 @@ import SwiftUI
 struct HandRowView: View {
     let hand: [Int]
     let buttonColumnWidth: CGFloat
+    let passDirection: String
     let moonShooterIndex: Int?
     let onSave: ([Int], Int?) -> Void
 
@@ -17,10 +18,11 @@ struct HandRowView: View {
 
     var body: some View {
         HStack(spacing: 4) {
-            // Empty left column keeps score columns aligned with the header
-            // (the current pass direction lives in the bar above the input row)
-            Color.clear
-                .frame(width: buttonColumnWidth, height: 1)
+            // Pass direction — left column mirrors home/x buttons in header
+            Text(passDirection)
+                .font(.caption2)
+                .foregroundColor(.white.opacity(0.45))
+                .frame(width: buttonColumnWidth)
 
             // Score columns
             ForEach(0..<hand.count, id: \.self) { i in
@@ -131,6 +133,7 @@ struct HandRowView: View {
         HandRowView(
             hand: [0, 26, 26, 26],
             buttonColumnWidth: 44,
+            passDirection: "👈",
             moonShooterIndex: 0,
             onSave: { _, _ in }
         )
