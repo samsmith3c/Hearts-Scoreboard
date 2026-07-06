@@ -151,7 +151,7 @@ final class TutorialManager: ObservableObject {
         // Built directly rather than via startGame(), which would overwrite
         // the real saved player names/target score in UserDefaults.
         let vm = GameViewModel()
-        vm.playerNames = ["You", "Ava", "Ben", "Cal"]
+        vm.playerNames = ["Sam", "Madi", "Shaun", "Carson"]
         vm.targetScore = 100
         vm.commitHand([3, 7, 10, 6])
         vm.commitHand([0, 26, 26, 26], moonShooterIndex: 0)
@@ -159,7 +159,7 @@ final class TutorialManager: ObservableObject {
         demoViewModel = vm
 
         let game = SavedGame(
-            playerNames: ["You", "Ava", "Ben", "Cal"],
+            playerNames: ["Sam", "Madi", "Shaun", "Carson"],
             finalScores: [26, 42, 46, 42],
             winnerIndex: 0
         )
