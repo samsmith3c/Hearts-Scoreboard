@@ -32,7 +32,11 @@ export interface SharePayload {
   h: SharedHand[];
 }
 
-/** Wire shape: hands are arrays of 4 scores + optional 5th moon-shooter index. */
+/**
+ * Wire shape: hands are arrays of one score per player (n.length of them) +
+ * optional trailing moon-shooter index. Still v1 — the 4-player encoding is
+ * unchanged from pre-v1.4 links.
+ */
 type WirePayload = Omit<SharePayload, "h"> & { h: number[][] };
 
 const UUID_RE =
@@ -50,8 +54,8 @@ export function decodePayload(encoded: string): SharePayload | null {
       typeof p.id !== "string" ||
       !UUID_RE.test(p.id) ||
       !Array.isArray(p.n) ||
-      p.n.length === 0 ||
-      p.n.length > 4 ||
+      p.n.length < 3 ||
+      p.n.length > 6 ||
       !Array.isArray(p.s) ||
       p.s.length !== p.n.length ||
       typeof p.w !== "number" ||
@@ -63,7 +67,7 @@ export function decodePayload(encoded: string): SharePayload | null {
       !p.h.every(
         (hand) =>
           Array.isArray(hand) &&
-          (hand.length === 4 || hand.length === 5) &&
+          (hand.length === p.n.length || hand.length === p.n.length + 1) &&
           hand.every((x) => Number.isInteger(x)),
       )
     ) {
@@ -72,8 +76,8 @@ export function decodePayload(encoded: string): SharePayload | null {
     return {
       ...p,
       h: p.h.map((hand) => ({
-        s: hand.slice(0, 4),
-        m: hand.length === 5 ? hand[4] : undefined,
+        s: hand.slice(0, p.n.length),
+        m: hand.length === p.n.length + 1 ? hand[p.n.length] : undefined,
       })),
     };
   } catch {
@@ -103,5 +107,6 @@ export function escapeHtml(s: string): string {
 }
 
 // What's next:
-// - api/game.ts renders the recap page + OG tags from this payload.
-// - api/og.tsx renders the GameHistoryCard-styled image from this payload.
+// - api/game.ts and api/og.tsx already render columns from p.n, so 3–6
+//   players flow through unchanged; eyeball a 6-player /og render after the
+//   next production deploy in case the fixed font sizes get cramped.

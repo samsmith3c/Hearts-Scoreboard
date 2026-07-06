@@ -39,8 +39,10 @@ struct SharePayload: Codable, Equatable {
     var s: [Int]
     /// Winner (lowest score) index.
     var w: Int
-    /// Hands in play order. Each hand is 4 per-player scores, with an optional
-    /// 5th element: the moon shooter's player index.
+    /// Hands in play order. Each hand is one score per player (n.count of
+    /// them), with an optional trailing element: the moon shooter's player
+    /// index. Still v1 — for 4-player games the encoding is byte-identical to
+    /// pre-v1.4 links, and no older app build ever shipped publicly.
     var h: [[Int]]
 
     // MARK: - Build from a saved game
@@ -53,11 +55,12 @@ struct SharePayload: Codable, Equatable {
         self.n = game.playerNames
         self.s = game.finalScores
         self.w = game.winnerIndex
+        let playerCount = game.playerNames.count
         self.h = (game.hands ?? [])
             .sorted { $0.handNumber < $1.handNumber }
             .map { hand in
-                var arr = Array(hand.scores.prefix(4))
-                while arr.count < 4 { arr.append(0) }
+                var arr = Array(hand.scores.prefix(playerCount))
+                while arr.count < playerCount { arr.append(0) }
                 if hand.isMoonShoot, let shooter = hand.moonShooterIndex {
                     arr.append(shooter)
                 }
@@ -99,9 +102,9 @@ struct SharePayload: Codable, Equatable {
               let payload = try? JSONDecoder().decode(SharePayload.self, from: json),
               payload.v == 1,
               UUID(uuidString: payload.id) != nil,
-              !payload.n.isEmpty,
+              (3...6).contains(payload.n.count),
               payload.n.count == payload.s.count,
-              payload.h.allSatisfy({ $0.count == 4 || $0.count == 5 })
+              payload.h.allSatisfy({ $0.count == payload.n.count || $0.count == payload.n.count + 1 })
         else { return nil }
         self = payload
     }
@@ -126,11 +129,12 @@ struct SharePayload: Codable, Equatable {
             shareID: UUID(uuidString: id)
         )
         var savedHands: [SavedHand] = []
+        let playerCount = n.count
         for (i, arr) in h.enumerated() {
-            let shooter = arr.count == 5 ? arr[4] : nil
+            let shooter = arr.count == playerCount + 1 ? arr[playerCount] : nil
             let savedHand = SavedHand(
                 handNumber: i,
-                scores: Array(arr.prefix(4)),
+                scores: Array(arr.prefix(playerCount)),
                 isMoonShoot: shooter != nil,
                 moonShooterIndex: shooter,
                 game: game
@@ -176,6 +180,8 @@ private extension Data {
 }
 
 // What's next:
-// - share-service/lib/payload.ts mirrors this format (fflate inflateSync).
-// - Links generated before compression landed will no longer decode — fine
-//   pre-release; the recap page shows a friendly damaged-link message.
+// - share-service/lib/payload.ts mirrors this format (fflate inflateSync) —
+//   the variable-count validation there must match this file exactly.
+// - The deployed service only picks this up when main redeploys; 3/5/6-player
+//   links shared before then hit the old validation and show the damaged-link
+//   page (in-app open via Universal Link works regardless).
