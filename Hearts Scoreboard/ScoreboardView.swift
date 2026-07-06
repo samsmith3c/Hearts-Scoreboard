@@ -26,9 +26,14 @@ struct ScoreboardView: View {
     // game in GameDetailView, whose toolbar has the ShareLink.
     @State private var gameToShare: SavedGame? = nil
 
-    init(viewModel: GameViewModel) {
+    /// initialInputValues is only supplied by the tutorial's demo rendering,
+    /// so the running-total counter has something to point at.
+    init(viewModel: GameViewModel, initialInputValues: [String]? = nil) {
         self.viewModel = viewModel
-        _inputValues = State(initialValue: Array(repeating: "", count: viewModel.playerCount))
+        _inputValues = State(
+            initialValue: initialInputValues
+                ?? Array(repeating: "", count: viewModel.playerCount)
+        )
     }
 
     private var playerCount: Int { viewModel.playerCount }
@@ -114,6 +119,7 @@ struct ScoreboardView: View {
                     .foregroundColor(.white.opacity(0.45))
             }
             .frame(width: buttonColumnWidth)
+            .tutorialAnchor(.homeButton)
 
             ForEach(0..<playerCount, id: \.self) { i in
                 VStack(spacing: 3) {
@@ -142,10 +148,12 @@ struct ScoreboardView: View {
                     .foregroundColor(.white.opacity(0.45))
             }
             .frame(width: buttonColumnWidth)
+            .tutorialAnchor(.quitButton)
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 14)
         .background(Color.black.opacity(0.30))
+        .tutorialAnchor(.scoreHeader)
     }
 
     private func scoreColor(_ score: Int) -> Color {
@@ -170,6 +178,7 @@ struct ScoreboardView: View {
                     }
                     .font(.caption)
                     .foregroundColor(.white.opacity(0.75))
+                    .tutorialAnchor(.passIndicator)
                     .padding(.leading, 16)
 
                     Spacer()
@@ -179,6 +188,7 @@ struct ScoreboardView: View {
                             .font(.caption)
                             .fontWeight(.semibold)
                             .foregroundColor(runningTotalColor)
+                            .tutorialAnchor(.runningTotal)
                             .padding(.trailing, 16)
                             .animation(.easeInOut(duration: 0.15), value: runningTotal)
                     }
@@ -198,6 +208,7 @@ struct ScoreboardView: View {
             inputRow
                 .padding(.vertical, 10)
                 .background(Color.white.opacity(0.06))
+                .tutorialAnchor(.inputRow)
 
             // ── "PAST HANDS" section divider ────────────────────────────────
             HStack {
@@ -235,6 +246,8 @@ struct ScoreboardView: View {
                                     viewModel.updateHand(at: i, values: values, moonShooterIndex: moonIdx)
                                 }
                             )
+                            // Spotlight target = the topmost (most recent) row
+                            .tutorialAnchor(i == viewModel.hands.count - 1 ? .pastHandRow : nil)
                             Rectangle()
                                 .fill(Color.white.opacity(0.07))
                                 .frame(height: 1)

@@ -377,6 +377,7 @@ struct GameHistoryCard: View {
                             .padding(.vertical, 2)
                     }
                     .buttonStyle(.plain)
+                    .tutorialAnchor(.gameCardDelete)
                 }
 
                 Divider().background(Color.white.opacity(0.18))

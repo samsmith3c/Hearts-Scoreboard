@@ -8,6 +8,9 @@ import GameKit
 
 struct PlayerSetupView: View {
     @ObservedObject var viewModel: GameViewModel
+    /// Re-launches the tutorial ("?" button). Defaults to a no-op so previews
+    /// and existing call sites don't need to supply one.
+    var onShowTutorial: () -> Void = {}
     @FocusState private var focusedField: Int?
     @State private var showNewGameConfirmation = false
     @State private var showNoSelfWarning = false
@@ -68,6 +71,7 @@ struct PlayerSetupView: View {
                             }
                         }
                         .pickerStyle(.segmented)
+                        .tutorialAnchor(.playerCountPicker)
                         .padding(.bottom, 6)
 
                         VStack(spacing: 14) {
@@ -152,10 +156,21 @@ struct PlayerSetupView: View {
                 .frame(maxWidth: 480)
             }
 
-            // Stats button — top-right corner
+            // Tutorial "?" button top-left, stats button top-right
             VStack {
                 HStack {
+                    Button {
+                        onShowTutorial()
+                    } label: {
+                        Image(systemName: "questionmark.circle")
+                            .font(.title3)
+                            .foregroundColor(.white.opacity(0.6))
+                            .padding(16)
+                    }
+                    .tutorialAnchor(.helpButton)
+
                     Spacer()
+
                     Button {
                         showStats = true
                     } label: {
@@ -257,6 +272,7 @@ struct PlayerSetupView: View {
                     .animation(.easeInOut(duration: 0.15), value: viewModel.selfPlayerIndex)
             }
             .buttonStyle(.plain)
+            .tutorialAnchor(i == 0 ? .selfMarker : nil)
 
             TextField("Player \(i + 1) name", text: nameBinding(i))
                 .padding(.horizontal, 12)

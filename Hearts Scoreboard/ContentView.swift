@@ -13,15 +13,19 @@ import SwiftData
 struct ContentView: View {
     @StateObject private var viewModel = GameViewModel()
     @StateObject private var shareRouter = ShareRouter()
+    @StateObject private var tutorial = TutorialManager()
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.modelContext) private var modelContext
 
     var body: some View {
         Group {
-            if viewModel.gameStarted {
+            if tutorial.isActive {
+                tutorialBase
+                    .allowsHitTesting(false)
+            } else if viewModel.gameStarted {
                 ScoreboardView(viewModel: viewModel)
             } else {
-                PlayerSetupView(viewModel: viewModel)
+                PlayerSetupView(viewModel: viewModel, onShowTutorial: tutorial.start)
             }
         }
         .environment(
@@ -30,9 +34,37 @@ struct ContentView: View {
                 ? dynamicTypeSize.stepped(by: 2)
                 : dynamicTypeSize
         )
+        .overlayPreferenceValue(TutorialAnchorKey.self) { anchors in
+            if tutorial.isActive {
+                TutorialOverlayView(manager: tutorial, anchors: anchors)
+            }
+        }
         .onOpenURL { handleIncomingURL($0) }
         .incomingShareHost()
         .environmentObject(shareRouter)
+        .onAppear {
+            if !TutorialManager.hasSeenTutorial {
+                tutorial.start()
+            }
+        }
+    }
+
+    /// What renders behind the tutorial overlay. Setup steps spotlight the
+    /// real setup screen; scoreboard/stats steps swap in demo-data renderings
+    /// of the real views, since a first launch has no game or history to show.
+    @ViewBuilder
+    private var tutorialBase: some View {
+        switch tutorial.currentStep.screen {
+        case .setup:
+            PlayerSetupView(viewModel: viewModel, onShowTutorial: tutorial.start)
+        case .scoreboard, .endGame:
+            ScoreboardView(
+                viewModel: tutorial.demoViewModel,
+                initialInputValues: tutorial.demoInputValues
+            )
+        case .stats:
+            TutorialStatsDemo(game: tutorial.demoGame)
+        }
     }
 
     /// Handles an incoming recap Universal Link. If a game with the same
