@@ -12,11 +12,9 @@ import SwiftData
 
 struct ContentView: View {
     @StateObject private var viewModel = GameViewModel()
+    @StateObject private var shareRouter = ShareRouter()
     @Environment(\.dynamicTypeSize) private var dynamicTypeSize
     @Environment(\.modelContext) private var modelContext
-
-    @State private var incomingGame: SavedGame? = nil
-    @State private var incomingMode: GameDetailMode = .incomingShare
 
     var body: some View {
         Group {
@@ -33,9 +31,8 @@ struct ContentView: View {
                 : dynamicTypeSize
         )
         .onOpenURL { handleIncomingURL($0) }
-        .fullScreenCover(item: $incomingGame) { game in
-            GameDetailView(game: game, mode: incomingMode)
-        }
+        .incomingShareHost()
+        .environmentObject(shareRouter)
     }
 
     /// Handles an incoming recap Universal Link. If a game with the same
@@ -54,18 +51,45 @@ struct ContentView: View {
         descriptor.fetchLimit = 1
 
         if let existing = try? modelContext.fetch(descriptor).first {
-            incomingMode = .ownHistory
-            incomingGame = existing
+            shareRouter.incomingMode = .ownHistory
+            shareRouter.incomingGame = existing
         } else {
-            incomingMode = .incomingShare
-            incomingGame = payload.makeSavedGame()
+            shareRouter.incomingMode = .incomingShare
+            shareRouter.incomingGame = payload.makeSavedGame()
         }
     }
 }
 
-// What's next:
-// - Step 14: end-to-end test — simulator `xcrun simctl openurl` with a real
-//   share link to exercise both the new-game and duplicate paths.
+// MARK: - Incoming share routing
+
+/// Routes an incoming recap link to whichever screen is currently topmost.
+/// A single root-level cover can't present while another sheet/cover is up,
+/// so the host modifier is attached at every presentation site that can be
+/// on top (app root, the Stats sheet, each game-detail cover); the unblocked
+/// one wins and the recap appears above whatever the user was doing.
+@MainActor
+final class ShareRouter: ObservableObject {
+    @Published var incomingGame: SavedGame? = nil
+    /// Set before `incomingGame` so the presenting host reads the right mode.
+    var incomingMode: GameDetailMode = .incomingShare
+}
+
+private struct IncomingShareHost: ViewModifier {
+    @EnvironmentObject private var router: ShareRouter
+
+    func body(content: Content) -> some View {
+        content.fullScreenCover(item: $router.incomingGame) { game in
+            // Deliberately no .incomingShareHost() here — the presented recap
+            // hosting another copy of itself would recurse.
+            GameDetailView(game: game, mode: router.incomingMode)
+        }
+    }
+}
+
+extension View {
+    /// Attach wherever a view can be the topmost presented screen.
+    func incomingShareHost() -> some View { modifier(IncomingShareHost()) }
+}
 
 // MARK: - DynamicTypeSize Helpers
 

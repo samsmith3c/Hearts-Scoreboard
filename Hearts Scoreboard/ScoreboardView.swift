@@ -73,6 +73,7 @@ struct ScoreboardView: View {
         }
         .fullScreenCover(item: $gameToShare, onDismiss: { viewModel.resetGame() }) { game in
             GameDetailView(game: game)
+                .incomingShareHost()
         }
         // Quit confirmation alert
         .alert("Quit Game?", isPresented: $showQuitConfirmation) {

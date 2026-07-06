@@ -65,7 +65,9 @@ struct StatsView: View {
             }
             .fullScreenCover(item: $selectedGame) { game in
                 GameDetailView(game: game)
+                    .incomingShareHost()
             }
+            .incomingShareHost()
         }
     }
 
