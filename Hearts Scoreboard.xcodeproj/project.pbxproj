@@ -16,7 +16,6 @@
 		223476CF2FBA31BC00FBF4CF /* Hearts Scoreboard Icon v2.icon in Resources */ = {isa = PBXBuildFile; fileRef = 223476CE2FBA31BC00FBF4CF /* Hearts Scoreboard Icon v2.icon */; };
 		A53C14B22FAECDFC00355C98 /* Hearts_ScoreboardApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14B12FAECDFC00355C98 /* Hearts_ScoreboardApp.swift */; };
 		A53C14B42FAECDFC00355C98 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14B32FAECDFC00355C98 /* ContentView.swift */; };
-		A53C14B62FAECDFC00355C98 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14B52FAECDFC00355C98 /* Item.swift */; };
 		A53C14B82FAECDFD00355C98 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A53C14B72FAECDFD00355C98 /* Assets.xcassets */; };
 		A53C14BB2FAECDFD00355C98 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A53C14BA2FAECDFD00355C98 /* Preview Assets.xcassets */; };
 		A53C14C52FAECDFD00355C98 /* Hearts_ScoreboardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = A53C14C42FAECDFD00355C98 /* Hearts_ScoreboardTests.swift */; };
@@ -61,7 +60,6 @@
 		A53C14AE2FAECDFC00355C98 /* Hearts Scoreboard.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Hearts Scoreboard.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		A53C14B12FAECDFC00355C98 /* Hearts_ScoreboardApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Hearts_ScoreboardApp.swift; sourceTree = "<group>"; };
 		A53C14B32FAECDFC00355C98 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		A53C14B52FAECDFC00355C98 /* Item.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
 		A53C14B72FAECDFD00355C98 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		A53C14BA2FAECDFD00355C98 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		A53C14C02FAECDFD00355C98 /* Hearts ScoreboardTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Hearts ScoreboardTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -142,7 +140,6 @@
 				A53C14EB2FAEF22300355C98 /* ShootingMoonView.swift */,
 				A53C14B12FAECDFC00355C98 /* Hearts_ScoreboardApp.swift */,
 				A53C14B32FAECDFC00355C98 /* ContentView.swift */,
-				A53C14B52FAECDFC00355C98 /* Item.swift */,
 				A53C14B72FAECDFD00355C98 /* Assets.xcassets */,
 				223476CE2FBA31BC00FBF4CF /* Hearts Scoreboard Icon v2.icon */,
 				A5B942242FB162C200EAA7A4 /* Hearts Scoreboard Icon v1.icon */,
@@ -311,7 +308,6 @@
 				A53C14F52FAEF22300355C98 /* HandRowView.swift in Sources */,
 				A53C14F02FAEF22300355C98 /* GameViewModel.swift in Sources */,
 				A53C14B42FAECDFC00355C98 /* ContentView.swift in Sources */,
-				A53C14B62FAECDFC00355C98 /* Item.swift in Sources */,
 				A53C14B22FAECDFC00355C98 /* Hearts_ScoreboardApp.swift in Sources */,
 				223476C52FB9246300FBF4CF /* SavedGame.swift in Sources */,
 				223476C62FB9246300FBF4CF /* StatsViewModel.swift in Sources */,
