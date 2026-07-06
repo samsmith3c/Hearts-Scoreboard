@@ -100,13 +100,30 @@ struct SharePayload: Codable, Equatable {
         guard let compressed = Data(base64Encoded: base64),
               let json = compressed.inflated(),
               let payload = try? JSONDecoder().decode(SharePayload.self, from: json),
-              payload.v == 1,
-              UUID(uuidString: payload.id) != nil,
-              (3...6).contains(payload.n.count),
-              payload.n.count == payload.s.count,
-              payload.h.allSatisfy({ $0.count == payload.n.count || $0.count == payload.n.count + 1 })
+              payload.isStructurallyValid
         else { return nil }
         self = payload
+    }
+
+    /// Every index and value a decoded link could use to corrupt local data
+    /// must be checked here — a bad `w` or shooter index doesn't crash, it
+    /// silently poisons lifetime stats after import.
+    private var isStructurallyValid: Bool {
+        guard v == 1,
+              UUID(uuidString: id) != nil,
+              (3...6).contains(n.count),
+              n.count == s.count,
+              s.allSatisfy({ $0 >= 0 }),
+              (0..<n.count).contains(w)
+        else { return false }
+        return h.allSatisfy { hand in
+            guard hand.prefix(n.count).allSatisfy({ $0 >= 0 }) else { return false }
+            switch hand.count {
+            case n.count:     return true
+            case n.count + 1: return (0..<n.count).contains(hand[n.count])  // moon shooter index
+            default:          return false
+            }
+        }
     }
 
     /// Parses an incoming Universal Link of the form https://<host>/g/<payload>.
