@@ -27,7 +27,7 @@ struct SharePayload: Codable, Equatable {
     /// Payload format version.
     var v: Int = 1
     /// The game's stable shareID (lowercase UUID string) — dedupe key.
-    var id: String
+    var id: String  
     /// Game date as Unix seconds.
     var d: Int
     /// Sharer's UTC offset in minutes at game time, so the web recap can show
