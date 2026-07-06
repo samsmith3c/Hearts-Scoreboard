@@ -19,7 +19,7 @@ export const config = { runtime: "edge" };
 const APP_STORE_URL = "https://www.apple.com/app-store/";
 
 function ogTitle(p: SharePayload): string {
-  return `♥ Hearts: ${p.n[p.w]} wins with ${p.s[p.w]}!`;
+  return `❤️ ${p.n[p.w]} Wins! ❤️`;
 }
 
 function ogDescription(p: SharePayload): string {
