@@ -12,11 +12,7 @@ import {
 
 export const config = { runtime: "edge" };
 
-// TODO(release): replace with the app's real App Store link
-// (https://apps.apple.com/app/id<AppleID>) once the App Store Connect record
-// exists — tracked as PR #1 checklist item 8. Placeholder for now so the
-// install button is testable.
-const APP_STORE_URL = "https://www.apple.com/app-store/";
+const APP_STORE_URL = "https://apps.apple.com/app/hearts-score/id6767874868";
 
 function ogTitle(p: SharePayload): string {
   return `❤️ ${p.n[p.w]} Wins! ❤️`;
@@ -152,7 +148,3 @@ export default function handler(req: Request): Response {
     },
   });
 }
-
-// What's next:
-// - Set APP_STORE_URL once Sam provides the real App Store link (plan step 8).
-// - api/og.tsx renders the og:image referenced above (plan step 6).
